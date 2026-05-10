@@ -1,0 +1,1125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>IDENTITY PRO // OPERATING SYSTEM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;700;900&family=JetBrains+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg-0:#04111f;--bg-1:#081a2e;--bg-2:#0d2540;--grid:rgba(0,196,255,.05);--cy-0:#00e0ff;--cy-1:#4ad6ff;--cy-2:#7fe8ff;--cy-dim:#2a7da0;--amber:#ffa733;--amber-2:#ff7a2a;--red:#ff4661;--green:#5cffb1;--text:#bfeaff;--text-dim:#5d8aa8;--line:rgba(0,196,255,.18);--line-dim:rgba(0,196,255,.08);--panel:rgba(8,26,46,.72);--panel-edge:rgba(0,196,255,.32);--glow:0 0 24px rgba(0,196,255,.18);}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%;background:var(--bg-0);color:var(--text);font-family:"JetBrains Mono",ui-monospace,monospace;overflow:hidden}
+  body{background:radial-gradient(1200px 700px at 50% 50%, rgba(0,80,140,.35), transparent 60%),radial-gradient(900px 500px at 12% 90%, rgba(0,30,70,.5), transparent 60%),radial-gradient(900px 500px at 88% 8%, rgba(0,30,70,.5), transparent 60%),linear-gradient(180deg,var(--bg-0),var(--bg-1));position:relative;}
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);background-size:40px 40px;mask-image: radial-gradient(ellipse at center, #000 30%, transparent 80%);z-index:0;}
+  body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;background:repeating-linear-gradient(0deg, rgba(0,196,255,.025) 0 1px, transparent 1px 3px);mix-blend-mode:overlay;}
+  .stage{position:relative;height:100vh;width:100vw;z-index:2}
+  .topbar{position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-family:"Share Tech Mono",monospace;font-size:12px;letter-spacing:.18em;color:var(--cy-2);border-bottom:1px solid var(--line);background:linear-gradient(180deg, rgba(0,196,255,.03), transparent);}
+  .topbar .l, .topbar .r{display:flex;gap:24px;align-items:center}
+  .pill{padding:4px 10px;border:1px solid var(--line);border-radius:2px;color:var(--cy-1)}
+  .pill.warn{color:var(--amber);border-color:rgba(255,167,51,.45)}
+  .blink{animation:blink 1.6s ease-in-out infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+  .clock{font-family:"Orbitron",sans-serif;font-weight:700;letter-spacing:.2em;font-size:14px;color:var(--cy-0);text-shadow:0 0 12px rgba(0,224,255,.45)}
+  .bottombar{position:absolute;bottom:0;left:0;right:0;height:112px;border-top:1px solid var(--line);display:flex;align-items:center;padding:14px 22px;gap:18px;background:linear-gradient(0deg, rgba(0,196,255,.04), transparent);}
+  .bb-label{font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--cy-dim);min-width:180px}
+  .roadmap{flex:1;display:grid;grid-template-columns:repeat(5,1fr);gap:10px;align-items:stretch;height:84px}
+  .phase{position:relative;border:1px solid var(--line);background:rgba(8,26,46,.6);padding:10px 12px;display:flex;flex-direction:column;justify-content:space-between;gap:4px;cursor:pointer;transition:all .25s ease;overflow:hidden;}
+  .phase:hover{border-color:var(--cy-0);box-shadow:0 0 20px rgba(0,224,255,.25);transform:translateY(-1px)}
+  .phase .p-num{font-family:"Orbitron";font-weight:900;font-size:11px;color:var(--cy-dim);letter-spacing:.2em}
+  .phase .p-title{font-size:10px;color:var(--text);letter-spacing:.06em;text-transform:uppercase;line-height:1.15;font-weight:500}
+  .phase .p-win{font-size:9px;color:var(--text-dim);font-family:"Share Tech Mono"}
+  .phase.active{border-color:var(--cy-0);background:linear-gradient(180deg, rgba(0,224,255,.08), rgba(0,224,255,.02));box-shadow:inset 0 0 30px rgba(0,224,255,.08), 0 0 18px rgba(0,224,255,.18)}
+  .phase.active .p-num{color:var(--cy-0)}
+  .phase.done{opacity:.45}
+  .side{position:absolute;width:296px;background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(6px);box-shadow:var(--glow);}
+  .side.left{left:18px;top:74px;bottom:96px}
+  .side.right{right:18px;top:74px;bottom:96px}
+  .side .head{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;font-family:"Share Tech Mono";font-size:11px;letter-spacing:.22em;color:var(--cy-2);background:linear-gradient(90deg, rgba(0,196,255,.08), transparent);}
+  .side .head .dot{width:6px;height:6px;border-radius:50%;background:var(--cy-0);box-shadow:0 0 10px var(--cy-0)}
+  .side .body{padding:14px;display:flex;flex-direction:column;gap:14px;overflow:auto;height:calc(100% - 38px)}
+  .side .body::-webkit-scrollbar{width:4px}
+  .side .body::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+  .meter{display:flex;flex-direction:column;gap:6px}
+  .meter .row{display:flex;justify-content:space-between;align-items:baseline;font-family:"Share Tech Mono";font-size:11px;letter-spacing:.16em;color:var(--cy-1)}
+  .meter .row .val{color:var(--cy-0);font-family:"Orbitron";font-weight:700;font-size:13px;text-shadow:0 0 8px rgba(0,224,255,.45)}
+  .bar{position:relative;height:8px;background:rgba(0,196,255,.06);border:1px solid var(--line-dim);overflow:hidden}
+  .bar .fill{height:100%;background:linear-gradient(90deg,var(--cy-0),var(--cy-1));box-shadow:0 0 10px rgba(0,224,255,.7);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .bar.amber .fill{background:linear-gradient(90deg,var(--amber),var(--amber-2));box-shadow:0 0 10px rgba(255,167,51,.6)}
+  .bar .ticks{position:absolute;inset:0;background:repeating-linear-gradient(90deg, transparent 0 9.99%, rgba(0,196,255,.18) 9.99% 10%)}
+  .total-row{margin-top:6px;padding-top:10px;border-top:1px dashed var(--line)}
+  .total-row .row{font-size:12px}
+  .total-row .row .val{font-size:18px;color:var(--amber);text-shadow:0 0 10px rgba(255,167,51,.55)}
+  .phase-list{display:flex;flex-direction:column;gap:8px}
+  .phase-row{display:flex;gap:10px;align-items:flex-start;padding:8px;border:1px solid var(--line-dim);background:rgba(0,30,55,.4);position:relative;cursor:pointer;transition:all .2s}
+  .phase-row .idx{font-family:"Orbitron";font-weight:900;font-size:14px;color:var(--cy-dim);min-width:20px}
+  .phase-row .info{flex:1}
+  .phase-row .info .t{font-size:11px;color:var(--text);letter-spacing:.04em;line-height:1.3;text-transform:uppercase}
+  .phase-row .info .s{font-size:10px;color:var(--text-dim);font-family:"Share Tech Mono";margin-top:2px}
+  .phase-row .info .sig{font-size:9.5px;color:var(--cy-2);margin-top:4px;font-style:italic}
+  .phase-row.active{border-color:var(--cy-0);background:linear-gradient(90deg, rgba(0,224,255,.08), rgba(0,224,255,.01));box-shadow:0 0 16px rgba(0,224,255,.2)}
+  .phase-row.active .idx{color:var(--cy-0)}
+  .phase-row.done{opacity:.55}
+  .phase-row:hover{border-color:var(--cy-0);box-shadow:0 0 18px rgba(0,224,255,.18);transform:translateX(2px)}
+  .phase-row .phase-open{position:absolute;right:8px;top:8px;color:var(--cy-1);font-size:11px;letter-spacing:.2em;font-family:"Share Tech Mono"}
+  .phase-progress{margin-top:6px;display:flex;flex-direction:column;gap:3px}
+  .phase-progress .pp-bar{height:4px;background:rgba(0,196,255,.07);border:1px solid var(--line-dim);overflow:hidden}
+  .phase-progress .pp-fill{height:100%;background:linear-gradient(90deg,var(--cy-0),var(--cy-1));box-shadow:0 0 6px rgba(0,224,255,.65);transition:width .5s cubic-bezier(.2,.8,.2,1);width:0%}
+  .phase-row.active .phase-progress .pp-fill{background:linear-gradient(90deg,var(--amber),var(--cy-0))}
+  .phase-progress .pp-meta{display:flex;justify-content:space-between;font-family:"Share Tech Mono";font-size:9px;letter-spacing:.16em;color:var(--cy-1)}
+  .phase-progress .pp-meta span:first-child{color:var(--cy-0)}
+  .phase-tab-bar{height:3px;background:rgba(0,196,255,.08);border:1px solid var(--line-dim);position:relative;margin:4px 0}
+  .ptb-fill{height:100%;background:linear-gradient(90deg,var(--cy-0),var(--cy-1));box-shadow:0 0 6px rgba(0,224,255,.6);transition:width .5s ease;width:0%}
+  .phase.active .ptb-fill{background:linear-gradient(90deg,var(--amber),var(--cy-0))}
+  .phase .p-pct{color:var(--cy-0);font-family:"Orbitron";font-weight:700}
+  .phase.active .p-pct{color:var(--amber)}
+  .id-card{border:1px solid var(--amber);background:linear-gradient(180deg, rgba(255,167,51,.07), rgba(255,167,51,.02));padding:12px;font-family:"Share Tech Mono";font-size:11px;letter-spacing:.04em;color:var(--amber);line-height:1.5;}
+  .id-card .label{font-size:9px;letter-spacing:.3em;color:var(--amber-2);margin-bottom:6px;display:block}
+  .hubstage{position:absolute;inset:90px 332px 124px 332px;display:grid;place-items:center}
+  .satellites{position:absolute;inset:0;pointer-events:none}
+  .core{position:relative;width:520px;height:520px;display:grid;place-items:center;}
+  .ring{position:absolute;border-radius:50%;border:1px solid var(--line);pointer-events:none}
+  .ring.r1{width:520px;height:520px;border-color:rgba(0,196,255,.10)}
+  .ring.r2{width:430px;height:430px;border-color:rgba(0,196,255,.18);border-style:dashed}
+  .ring.r3{width:340px;height:340px;border-color:rgba(0,196,255,.30)}
+  .ring.r4{width:260px;height:260px;border:1px solid rgba(0,196,255,.5);box-shadow:inset 0 0 40px rgba(0,224,255,.12), 0 0 30px rgba(0,224,255,.18)}
+  .ring.spin{animation:spin 60s linear infinite}
+  .ring.spin-rev{animation:spin 90s linear infinite reverse}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .ring .arc{position:absolute;left:50%;top:50%;width:340px;height:340px;border:2px solid var(--cy-0);border-radius:50%;border-color:transparent var(--cy-0) transparent transparent;transform:translate(-50%,-50%) rotate(0deg);box-shadow:0 0 30px rgba(0,224,255,.25)}
+  .ring .arc-amber{position:absolute;left:50%;top:50%;width:430px;height:430px;border:1px solid transparent;border-radius:50%;border-top-color:var(--amber);transform:translate(-50%,-50%);box-shadow:0 0 18px rgba(255,167,51,.45)}
+  .core .center{position:relative;width:228px;height:228px;border-radius:50%;background:radial-gradient(circle at 50% 35%, rgba(0,224,255,.25), rgba(0,40,70,.95) 70%);border:1px solid rgba(0,224,255,.7);box-shadow:inset 0 0 60px rgba(0,224,255,.25), 0 0 40px rgba(0,224,255,.35);display:grid;place-items:center;text-align:center;padding:18px;animation: corePulse 3.6s ease-in-out infinite;}
+  @keyframes corePulse{0%,100%{transform:scale(1);box-shadow:inset 0 0 60px rgba(0,224,255,.22),0 0 38px rgba(0,224,255,.32);border-color:rgba(0,224,255,.6);}50%{transform:scale(1.07);box-shadow:inset 0 0 90px rgba(0,224,255,.45),0 0 80px rgba(0,224,255,.65);border-color:rgba(0,224,255,1);}}
+  .core::after{content:"";position:absolute;width:280px;height:280px;border-radius:50%;border:1px solid rgba(0,224,255,.4);pointer-events:none;animation: haloPulse 3.6s ease-in-out infinite;}
+  @keyframes haloPulse{0%,100%{transform:scale(.95);opacity:.35;}50%{transform:scale(1.18);opacity:.05;}}
+  .core .center .title{font-family:"Orbitron";font-weight:900;font-size:18px;color:#fff;text-shadow:0 0 14px rgba(0,224,255,.7);letter-spacing:.16em;line-height:1.15;margin-top:4px}
+  .core .center .pct{font-family:"Orbitron";font-weight:900;font-size:36px;color:var(--cy-0);margin-top:10px;text-shadow:0 0 18px rgba(0,224,255,.7)}
+  .core .center .pct small{font-size:14px;color:var(--cy-2)}
+  .core .center .sub{font-family:"Share Tech Mono";font-size:9px;letter-spacing:.22em;color:var(--cy-1);margin-top:8px}
+  .habits-wrap{position:absolute;left:50%;bottom:124px;transform:translateX(-50%);width:min(1180px, calc(100vw - 80px));background:linear-gradient(180deg, rgba(8,26,46,.78), rgba(4,17,31,.86));border:1px solid var(--line);backdrop-filter:blur(6px);box-shadow:var(--glow);z-index:5;}
+  .habits-wrap::before,.habits-wrap::after{content:"";position:absolute;top:-1px;width:14px;height:14px;border:1px solid var(--cy-0);}
+  .habits-wrap::before{left:-1px;border-right:none;border-bottom:none}
+  .habits-wrap::after{right:-1px;border-left:none;border-bottom:none}
+  .habits-head{display:flex;justify-content:space-between;align-items:center;padding:7px 14px;border-bottom:1px solid var(--line);font-family:"Share Tech Mono";font-size:10px;letter-spacing:.24em;color:var(--cy-2);background:linear-gradient(90deg, rgba(0,196,255,.07), transparent);}
+  .habits-head .stats{font-family:"Orbitron";font-weight:700;font-size:11px;color:var(--cy-0);text-shadow:0 0 8px rgba(0,224,255,.5)}
+  .habits{display:flex;gap:7px;flex-wrap:wrap;justify-content:center;padding:10px 14px;}
+  .hbit{display:flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid var(--line);background:rgba(8,26,46,.78);font-family:"Share Tech Mono";font-size:10.5px;letter-spacing:.05em;color:var(--text);cursor:pointer;user-select:none;transition:all .2s ease;text-transform:uppercase;}
+  .hbit:hover{border-color:var(--cy-0);color:#fff;box-shadow:0 0 14px rgba(0,224,255,.25)}
+  .hbit .box{width:11px;height:11px;border:1px solid var(--cy-1);position:relative;flex-shrink:0}
+  .hbit.done .box{background:var(--cy-0);box-shadow:0 0 8px var(--cy-0)}
+  .hbit.done .box::after{content:"";position:absolute;left:2px;top:-1px;width:4px;height:7px;border:solid var(--bg-0);border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .hbit.done{color:var(--cy-2);text-decoration:line-through;text-decoration-color:var(--cy-dim)}
+  .hbit .layer-tag{font-size:8.5px;color:var(--amber);letter-spacing:.18em}
+  /* TO DO LIST BUTTON (anchored bottom-right of habits popup) */
+  .habits-foot{display:flex;justify-content:flex-end;align-items:center;padding:8px 14px;border-top:1px solid var(--line);background:linear-gradient(0deg, rgba(0,196,255,.04), transparent);position:relative}
+  .habits-foot::before,.habits-foot::after{content:"";position:absolute;bottom:-1px;width:14px;height:14px;border:1px solid var(--cy-0)}
+  .habits-foot::before{left:-1px;border-right:none;border-top:none}
+  .habits-foot::after{right:-1px;border-left:none;border-top:none}
+  .todo-btn{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px 16px;font-family:"Share Tech Mono",monospace;font-size:10.5px;letter-spacing:.24em;cursor:pointer;transition:all .25s;display:flex;align-items:center;gap:9px;text-transform:uppercase;position:relative}
+  .todo-btn:hover{background:rgba(255,167,51,.12);box-shadow:0 0 18px rgba(255,167,51,.35);color:#fff}
+  .todo-btn .td-dot{width:6px;height:6px;border-radius:50%;background:var(--amber);box-shadow:0 0 8px var(--amber);animation:blink 2s ease-in-out infinite}
+  .todo-btn .td-count{font-family:"Orbitron",sans-serif;font-weight:900;font-size:11px;color:var(--cy-0);background:rgba(0,224,255,.08);border:1px solid var(--line);padding:2px 8px;letter-spacing:.06em;text-shadow:0 0 6px rgba(0,224,255,.4)}
+  /* TO DO LIST MODAL (large window) */
+  .todo-modal-bg{position:fixed;inset:0;background:rgba(2,8,16,.82);backdrop-filter:blur(5px);display:none;z-index:60;align-items:center;justify-content:center;padding:24px;animation:fadein .2s ease}
+  .todo-modal-bg.open{display:flex}
+  .todo-modal{width:min(1280px,96vw);height:min(860px,94vh);background:linear-gradient(180deg, rgba(8,26,46,.96), rgba(4,17,31,.98));border:1px solid var(--cy-0);box-shadow:0 0 70px rgba(0,224,255,.4), inset 0 0 80px rgba(0,224,255,.08);display:flex;flex-direction:column;position:relative;overflow:hidden}
+  .todo-modal::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);pointer-events:none}
+  .todo-modal .corner{position:absolute;width:14px;height:14px;border:1px solid var(--cy-0);z-index:2}
+  .todo-modal .corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .todo-modal .corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+  .todo-modal .corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+  .todo-modal .corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .todo-head{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);font-family:"Share Tech Mono";font-size:11px;letter-spacing:.24em;color:var(--cy-2);background:linear-gradient(90deg, rgba(0,196,255,.1), transparent);position:relative;z-index:1}
+  .todo-head .ttl{font-family:"Orbitron",sans-serif;font-weight:900;font-size:19px;letter-spacing:.14em;color:#fff;text-shadow:0 0 16px rgba(0,224,255,.55);display:flex;align-items:center;gap:14px}
+  .todo-head .ttl .badge{color:var(--amber);font-size:13px;letter-spacing:.2em}
+  .todo-head .meta{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;color:var(--cy-1)}
+  .todo-tabs{display:flex;border-bottom:1px solid var(--line);padding:0 18px;gap:0;background:rgba(0,196,255,.025);position:relative;z-index:1;flex-wrap:wrap}
+  .todo-tab{padding:13px 20px;font-family:"Share Tech Mono",monospace;font-size:10.5px;letter-spacing:.22em;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;display:flex;align-items:center;gap:9px;text-transform:uppercase;position:relative}
+  .todo-tab:hover{color:var(--cy-1);background:rgba(0,196,255,.04)}
+  .todo-tab.active{color:var(--amber);border-bottom-color:var(--amber);background:rgba(255,167,51,.04)}
+  .todo-tab .tab-pill{font-family:"Orbitron",sans-serif;font-weight:700;font-size:9.5px;color:var(--cy-0);background:rgba(0,224,255,.07);border:1px solid var(--line-dim);padding:2px 7px;letter-spacing:.06em;min-width:22px;text-align:center}
+  .todo-tab.active .tab-pill{color:var(--amber);border-color:rgba(255,167,51,.42);background:rgba(255,167,51,.07)}
+  .todo-tab .tab-tag{font-family:"Orbitron",sans-serif;font-weight:900;font-size:10px;color:var(--cy-dim);letter-spacing:.18em}
+  .todo-tab.active .tab-tag{color:var(--amber-2)}
+  .todo-tab.completed-tab{margin-left:auto;color:var(--green);border-bottom-color:transparent}
+  .todo-tab.completed-tab.active{color:var(--green);border-bottom-color:var(--green);background:rgba(92,255,177,.05)}
+  .todo-tab.completed-tab .tab-pill{color:var(--green);border-color:rgba(92,255,177,.3);background:rgba(92,255,177,.05)}
+  .todo-body{flex:1;overflow:auto;padding:22px 26px;position:relative;z-index:1}
+  .todo-body::-webkit-scrollbar{width:5px}
+  .todo-body::-webkit-scrollbar-thumb{background:var(--line);border-radius:2px}
+  .todo-panel{display:none;flex-direction:column;gap:14px}
+  .todo-panel.active{display:flex}
+  .todo-intro{font-family:"Share Tech Mono",monospace;font-size:11px;color:var(--cy-1);font-style:italic;line-height:1.6;border-left:2px solid var(--amber);padding:6px 0 6px 14px;letter-spacing:.02em}
+  .todo-intro b{color:var(--amber);font-style:normal;font-weight:500;letter-spacing:.18em;font-size:9.5px;display:block;margin-bottom:4px}
+  .todo-add{display:flex;gap:10px;padding:14px;border:1px dashed rgba(0,196,255,.3);background:rgba(0,30,55,.35)}
+  .todo-add input{flex:1;background:rgba(0,20,40,.75);border:1px solid var(--line);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:13px;padding:11px 13px;outline:none;transition:border-color .2s}
+  .todo-add input:focus{border-color:var(--cy-0);box-shadow:0 0 10px rgba(0,224,255,.15)}
+  .todo-add input::placeholder{color:var(--text-dim);font-style:italic}
+  .todo-add button{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:11px 20px;font-family:"Share Tech Mono",monospace;font-size:10.5px;letter-spacing:.24em;cursor:pointer;transition:all .2s;text-transform:uppercase}
+  .todo-add button:hover{background:rgba(255,167,51,.14);box-shadow:0 0 14px rgba(255,167,51,.3);color:#fff}
+  .todo-list{display:flex;flex-direction:column;gap:8px}
+  .todo-item{display:flex;align-items:center;gap:14px;padding:13px 16px;border:1px solid var(--line-dim);background:rgba(0,20,40,.55);transition:all .2s;user-select:none;}
+  .todo-item:hover{border-color:var(--cy-1);background:rgba(0,196,255,.05)}
+  .todo-item .td-box{width:18px;height:18px;border:1px solid var(--cy-1);position:relative;flex-shrink:0;transition:all .2s;cursor:pointer}
+  .todo-item.done .td-box{background:var(--cy-0);border-color:var(--cy-0);box-shadow:0 0 10px var(--cy-0)}
+  .todo-item.done .td-box::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid var(--bg-0);border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .todo-item .td-text{flex:1;font-size:13.5px;color:var(--text);font-family:"JetBrains Mono",monospace;line-height:1.45;cursor:pointer}
+  .todo-item.done .td-text{color:var(--cy-2);text-decoration:line-through;text-decoration-color:var(--cy-dim)}
+  .todo-item .td-area{font-family:"Share Tech Mono",monospace;font-size:9px;letter-spacing:.2em;color:var(--amber);padding:4px 8px;border:1px solid rgba(255,167,51,.32);background:rgba(255,167,51,.06);flex-shrink:0;text-transform:uppercase}
+  .todo-item .td-when{font-family:"Share Tech Mono",monospace;font-size:9px;letter-spacing:.16em;color:var(--text-dim);flex-shrink:0}
+  .todo-item .td-del{background:transparent;border:1px solid var(--line-dim);color:var(--text-dim);width:26px;height:26px;font-size:15px;cursor:pointer;line-height:1;padding:0;transition:all .2s;flex-shrink:0;font-family:"Share Tech Mono"}
+  .todo-item .td-del:hover{border-color:var(--red);color:var(--red);background:rgba(255,70,97,.08)}
+  .todo-empty{font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:.2em;color:var(--text-dim);text-align:center;padding:42px 20px;border:1px dashed var(--line-dim);background:rgba(0,20,40,.3);text-transform:uppercase}
+  .todo-empty span{display:block;color:var(--cy-2);font-size:10px;margin-top:8px;letter-spacing:.18em}
+  .todo-completed-clear{margin-top:14px;background:transparent;border:1px solid var(--line-dim);color:var(--text-dim);padding:9px 14px;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;cursor:pointer;align-self:flex-start;transition:all .2s}
+  .todo-completed-clear:hover{border-color:var(--red);color:var(--red)}
+  .hub{position:absolute;width:240px;background:var(--panel);border:1px solid var(--line);padding:0;cursor:pointer;transition:box-shadow .25s, border-color .25s;pointer-events:auto;backdrop-filter:blur(6px);}
+  .hub.h1{top:20%;left:0}
+  .hub.h2{top:20%;right:0}
+  .hub.h3{bottom:20%;left:0}
+  .hub.h4{bottom:20%;right:0}
+  .hub:hover{border-color:var(--cy-0);box-shadow:0 0 22px rgba(0,224,255,.28)}
+  .hub .h-head{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;border-bottom:1px solid var(--line);font-family:"Share Tech Mono";font-size:11px;letter-spacing:.24em;color:var(--cy-2);background:linear-gradient(90deg, rgba(0,196,255,.07), transparent);}
+  .hub .h-head .badge{font-family:"Orbitron";font-weight:900;color:var(--amber);font-size:12px;letter-spacing:.18em}
+  .hub .h-body{padding:13px;display:flex;flex-direction:column;gap:9px}
+  .hub .h-title{font-family:"Orbitron";font-weight:700;font-size:14px;letter-spacing:.06em;color:#fff;line-height:1.2}
+  .hub .h-sub{font-family:"Share Tech Mono";font-size:11px;color:var(--cy-1);font-style:italic;line-height:1.4}
+  .hub .h-meta{display:flex;justify-content:space-between;align-items:center;margin-top:4px;font-family:"Share Tech Mono";font-size:10.5px;letter-spacing:.16em;color:var(--text-dim)}
+  .hub .mini-bar{height:3px;background:rgba(0,196,255,.1);position:relative;overflow:hidden}
+  .hub .mini-bar .mf{height:100%;background:var(--cy-0);box-shadow:0 0 8px var(--cy-0)}
+  .hub .corner{position:absolute;width:10px;height:10px;border:1px solid var(--cy-0)}
+  .hub .corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .hub .corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+  .hub .corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+  .hub .corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .modal-bg{position:fixed;inset:0;background:rgba(2,8,16,.78);backdrop-filter:blur(4px);display:none;z-index:50;align-items:center;justify-content:center;padding:30px;animation:fadein .2s ease;}
+  .modal-bg.open{display:flex}
+  @keyframes fadein{from{opacity:0}to{opacity:1}}
+  .modal{width:min(980px,95vw);max-height:88vh;overflow:hidden;background:linear-gradient(180deg, rgba(8,26,46,.96), rgba(4,17,31,.98));border:1px solid var(--cy-0);box-shadow:0 0 60px rgba(0,224,255,.35), inset 0 0 60px rgba(0,224,255,.08);display:flex;flex-direction:column;position:relative;}
+  .modal::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);pointer-events:none}
+  .modal .m-head{padding:14px 22px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);font-family:"Share Tech Mono";font-size:11px;letter-spacing:.24em;color:var(--cy-2);background:linear-gradient(90deg, rgba(0,196,255,.1), transparent);}
+  .modal .m-head .ttl{font-family:"Orbitron";font-weight:900;font-size:18px;letter-spacing:.12em;color:#fff;text-shadow:0 0 14px rgba(0,224,255,.5)}
+  .modal .m-head .layer-badge{color:var(--amber);font-family:"Orbitron";font-weight:900;letter-spacing:.18em}
+  .close{cursor:pointer;color:var(--cy-2);font-family:"Share Tech Mono";font-size:13px;padding:4px 10px;border:1px solid var(--line);transition:all .2s}
+  .close:hover{color:var(--bg-0);background:var(--cy-0);border-color:var(--cy-0)}
+  .modal .m-body{padding:22px;overflow:auto;display:grid;grid-template-columns:1fr;gap:16px}
+  .m-intro{font-family:"Share Tech Mono";font-size:12px;color:var(--cy-1);font-style:italic;line-height:1.55;border-left:2px solid var(--cy-0);padding-left:12px}
+  .obj{border:1px solid var(--line);background:rgba(0,30,55,.3);}
+  .obj .o-head{padding:12px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--text);border-bottom:1px solid transparent;transition:all .2s;}
+  .obj .o-head:hover{background:rgba(0,196,255,.04)}
+  .obj.open .o-head{border-bottom-color:var(--line);color:#fff;background:rgba(0,196,255,.05)}
+  .obj .o-head .icon{color:var(--cy-0);font-family:"Share Tech Mono";font-size:14px;transition:transform .2s}
+  .obj.open .o-head .icon{transform:rotate(45deg)}
+  .obj .o-body{display:none;padding:14px 18px;background:rgba(2,12,22,.5)}
+  .obj.open .o-body{display:block}
+  .obj .daily{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.18em;color:var(--amber);margin-bottom:10px}
+  .actions{display:flex;flex-direction:column;gap:8px}
+  .act{border:1px solid var(--line-dim);background:rgba(0,30,55,.3);}
+  .act .a-head{padding:10px 14px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;font-size:12px;color:var(--text);transition:all .2s;}
+  .act .a-head:hover{color:#fff;background:rgba(0,196,255,.04)}
+  .act .a-head::before{content:"▶";font-size:9px;color:var(--cy-1);margin-right:10px;transition:transform .2s}
+  .act.open .a-head::before{transform:rotate(90deg);color:var(--cy-0)}
+  .act .a-body{display:none;padding:0 16px 14px 30px;font-size:11.5px;color:var(--cy-2);line-height:1.6;font-family:"Share Tech Mono"}
+  .act.open .a-body{display:block}
+  .act .why{display:block;margin-bottom:6px;font-size:9.5px;letter-spacing:.22em;color:var(--amber);font-family:"Share Tech Mono"}
+  .phase-summary{display:grid;grid-template-columns:1fr 290px;gap:18px;border:1px solid var(--cy-0);background:linear-gradient(180deg, rgba(0,224,255,.06), rgba(0,224,255,.01));padding:16px;}
+  .ps-meta{display:flex;flex-direction:column;gap:10px;font-family:"Share Tech Mono"}
+  .ps-meta>div{display:flex;flex-direction:column;gap:2px}
+  .ps-meta .ps-l{font-size:9px;letter-spacing:.32em;color:var(--cy-dim)}
+  .ps-meta .ps-v{font-size:13px;color:var(--text);letter-spacing:.04em}
+  .ps-progress{display:flex;flex-direction:column;align-items:center;gap:8px;border-left:1px solid var(--line);padding-left:18px}
+  .ps-pct{font-family:"Orbitron";font-weight:900;font-size:46px;color:var(--cy-0);text-shadow:0 0 18px rgba(0,224,255,.6);line-height:1}
+  .ps-pct small{font-size:18px;color:var(--cy-2)}
+  .ps-bar-wrap{width:100%;display:flex;flex-direction:column;gap:6px;align-items:center}
+  .ps-bar{width:100%;height:8px;background:rgba(0,196,255,.08);border:1px solid var(--line-dim);overflow:hidden}
+  .ps-fill{height:100%;background:linear-gradient(90deg,var(--cy-0),var(--cy-1));box-shadow:0 0 10px rgba(0,224,255,.65);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+  .ps-stat{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;color:var(--cy-2)}
+  .lock-phase{margin-top:6px;background:transparent;border:1px solid var(--cy-0);color:var(--cy-0);padding:8px 12px;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;cursor:pointer;transition:all .2s;width:100%;}
+  .lock-phase:hover{background:rgba(0,224,255,.1);box-shadow:0 0 14px rgba(0,224,255,.4)}
+  .lock-phase.is-locked{border-color:var(--amber);color:var(--amber);background:rgba(255,167,51,.07);cursor:default}
+  .goal{border:1px solid var(--line);background:rgba(0,30,55,.3);transition:border-color .2s}
+  .goal.open{border-color:var(--cy-0);box-shadow:0 0 16px rgba(0,224,255,.12)}
+  .goal .g-head{padding:13px 16px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;transition:background .2s;}
+  .goal .g-head:hover{background:rgba(0,196,255,.04)}
+  .g-titlewrap{display:flex;align-items:baseline;gap:10px;flex:1;min-width:0}
+  .g-marker{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;color:var(--cy-2);flex-shrink:0}
+  .g-title{font-family:"JetBrains Mono",monospace;font-size:13.5px;color:#fff;letter-spacing:.02em}
+  .g-progress{display:flex;align-items:center;gap:10px}
+  .g-pbar{width:80px;height:5px;background:rgba(0,196,255,.08);border:1px solid var(--line-dim);overflow:hidden}
+  .g-pfill{height:100%;background:linear-gradient(90deg,var(--cy-0),var(--cy-1));box-shadow:0 0 6px rgba(0,224,255,.65);transition:width .4s}
+  .g-pct{font-family:"Orbitron";font-weight:700;font-size:11px;color:var(--cy-0);min-width:36px;text-align:right}
+  .goal .icon{color:var(--cy-0);font-family:"Share Tech Mono";font-size:14px;transition:transform .2s;margin-left:8px}
+  .goal.open .icon{transform:rotate(45deg)}
+  .g-body{display:none;padding:14px 18px 16px;background:rgba(2,12,22,.5);border-top:1px solid var(--line-dim)}
+  .goal.open .g-body{display:block}
+  .g-why{font-family:"Share Tech Mono";font-size:11.5px;color:var(--cy-1);line-height:1.55;margin-bottom:14px;padding-left:10px;border-left:2px solid var(--amber)}
+  .g-why .why-l{color:var(--amber);font-size:9.5px;letter-spacing:.24em;display:block;margin-bottom:4px}
+  .g-items{display:flex;flex-direction:column;gap:6px}
+  .g-item{display:flex;align-items:center;gap:11px;padding:9px 12px;border:1px solid var(--line-dim);background:rgba(0,20,40,.5);cursor:pointer;transition:all .2s;user-select:none;}
+  .g-item:hover{border-color:var(--cy-1);background:rgba(0,196,255,.06)}
+  .g-item .g-box{width:14px;height:14px;border:1px solid var(--cy-1);position:relative;flex-shrink:0;transition:all .2s;}
+  .g-item.done .g-box{background:var(--cy-0);border-color:var(--cy-0);box-shadow:0 0 8px var(--cy-0)}
+  .g-item.done .g-box::after{content:"";position:absolute;left:3px;top:0;width:5px;height:9px;border:solid var(--bg-0);border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .g-item .g-text{font-size:12.5px;color:var(--text);letter-spacing:.02em;font-family:"JetBrains Mono",monospace}
+  .g-item.done .g-text{color:var(--cy-2);text-decoration:line-through;text-decoration-color:var(--cy-dim)}
+  @media (max-width:780px){.phase-summary{grid-template-columns:1fr}.ps-progress{border-left:none;border-top:1px solid var(--line);padding-left:0;padding-top:14px}}
+  .side .corner,.modal .corner{position:absolute;width:12px;height:12px;border:1px solid var(--cy-0)}
+  .side .corner.tl,.modal .corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .side .corner.tr,.modal .corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+  .side .corner.bl,.modal .corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+  .side .corner.br,.modal .corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .northstar{position:absolute;left:50%;top:62px;transform:translateX(-50%);font-family:"Share Tech Mono";font-size:10.5px;letter-spacing:.32em;color:var(--cy-2);border:1px solid var(--line);padding:6px 18px;background:rgba(8,26,46,.6);text-transform:uppercase;}
+  .northstar b{color:var(--amber);font-weight:400}
+  @media (max-width:1280px){.side{width:248px}.hubstage{inset:90px 280px 124px 280px}.core{width:440px;height:440px}.ring.r1{width:440px;height:440px}.ring.r2{width:360px;height:360px}.ring.r3{width:280px;height:280px}.ring.r4{width:210px;height:210px}.core .center{width:190px;height:190px;padding:14px}.core .center .title{font-size:16px}.core .center .pct{font-size:32px}.hub{width:207px}}
+  @media (max-width:980px){.side{display:none}.hubstage{inset:90px 14px 124px 14px}.hub{width:176px}.hub .h-title{font-size:13px}}
+  @media (max-height:820px){.core{width:380px;height:380px}.ring.r1{width:380px;height:380px}.ring.r2{width:310px;height:310px}.ring.r3{width:250px;height:250px}.ring.r4{width:185px;height:185px}.core .center{width:170px;height:170px;padding:12px}.core .center .title{font-size:14px}.core .center .pct{font-size:26px;margin-top:6px}}
+  /* JOURNAL */
+  .j-section{display:flex;flex-direction:column;gap:12px}
+  .j-tabs-inner{display:flex;border-bottom:1px solid var(--line);margin-bottom:10px}
+  .j-tab-inner{padding:8px 15px;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.2em;color:var(--text-dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+  .j-tab-inner.active{color:var(--amber);border-bottom-color:var(--amber)}
+  .j-tab-inner:hover{color:var(--cy-1)}
+  .j-panel-inner{display:none;flex-direction:column;gap:10px}
+  .j-panel-inner.active{display:flex}
+  .j-field-inner{display:flex;flex-direction:column;gap:5px}
+  .j-lbl{font-family:"Share Tech Mono";font-size:9px;letter-spacing:.26em;color:var(--cy-2)}
+  .j-lbl span{color:var(--amber);margin-left:6px;font-size:8px;letter-spacing:.14em}
+  .j-ta{background:rgba(0,20,40,.7);border:1px solid var(--line);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:9px 12px;outline:none;transition:border-color .2s;resize:vertical;min-height:80px;line-height:1.6;width:100%}
+  .j-ta:focus{border-color:var(--cy-0);box-shadow:0 0 8px rgba(0,224,255,.1)}
+  .j-ops-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .j-img-area{border:1px dashed var(--line);padding:10px;text-align:center;cursor:pointer;transition:all .2s;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.16em;color:var(--text-dim)}
+  .j-img-area:hover{border-color:var(--cy-0);color:var(--cy-1)}
+  .j-img-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+  .j-img-wrap{position:relative;display:inline-block}
+  .j-img-thumb{width:72px;height:72px;object-fit:cover;border:1px solid var(--line);cursor:pointer;display:block}
+  .j-img-del{position:absolute;top:-4px;right:-4px;background:var(--red);color:#fff;border:none;width:16px;height:16px;font-size:12px;cursor:pointer;line-height:16px;text-align:center;padding:0}
+  .j-actions-bar{display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap}
+  .j-btn{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:8px 16px;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.2em;cursor:pointer;transition:all .2s}
+  .j-btn:hover{background:rgba(255,167,51,.12);box-shadow:0 0 14px rgba(255,167,51,.25)}
+  .j-btn.cy{border-color:var(--cy-0);color:var(--cy-0)}
+  .j-btn.cy:hover{background:rgba(0,224,255,.08)}
+  .j-saved-msg{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.18em;color:var(--green);opacity:0;transition:opacity .3s}
+  .j-saved-msg.show{opacity:1}
+  .j-archive{display:flex;flex-direction:column;gap:6px}
+  .j-arch-item{border:1px solid var(--line-dim);background:rgba(0,20,40,.4);overflow:hidden;transition:border-color .2s}
+  .j-arch-item:hover{border-color:var(--cy-0)}
+  .j-arch-head{display:flex;justify-content:space-between;align-items:center;padding:9px 13px;cursor:pointer;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.18em;color:var(--cy-1)}
+  .arch-date{color:var(--amber);font-family:"Orbitron";font-weight:700;font-size:11px}
+  .j-arch-body{display:none;padding:12px 14px;border-top:1px solid var(--line-dim);font-family:"Share Tech Mono";font-size:10.5px;color:var(--text-dim);line-height:1.55}
+  .j-arch-item.open .j-arch-body{display:block}
+  .j-arch-section{margin-bottom:10px}
+  .j-arch-sl{font-size:9px;letter-spacing:.26em;color:var(--cy-2);margin-bottom:4px}
+  .j-arch-text{color:var(--text);white-space:pre-wrap;font-size:11px}
+  .j-arch-imgs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .j-arch-img{width:60px;height:60px;object-fit:cover;border:1px solid var(--line);cursor:pointer}
+  .j-arch-actions{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line-dim)}
+  .no-entries{font-family:"Share Tech Mono";font-size:10px;letter-spacing:.18em;color:var(--text-dim);text-align:center;padding:20px;border:1px dashed var(--line-dim)}
+  /* Journal status on L3 hub card */
+  .j-hub-status{display:flex;align-items:center;gap:7px;padding:5px 8px;border:1px solid var(--line-dim);font-family:"Share Tech Mono";font-size:9px;letter-spacing:.16em;margin-top:2px}
+  .j-hub-status .jdot{width:6px;height:6px;border-radius:50%;background:var(--text-dim);flex-shrink:0}
+  .j-hub-status.filed{border-color:rgba(92,255,177,.35);color:var(--green)}
+  .j-hub-status.filed .jdot{background:var(--green);box-shadow:0 0 6px var(--green)}
+  .j-hub-status.ready{border-color:rgba(255,167,51,.35);color:var(--amber)}
+  .j-hub-status.ready .jdot{background:var(--amber);box-shadow:0 0 6px var(--amber);animation:blink 1.6s ease-in-out infinite}
+  /* FOCUS WHEEL */
+  .fw-wrap{display:flex;flex-direction:column;gap:14px}
+  .fw-instructions{border:1px solid var(--line);background:rgba(0,30,55,.3)}
+  .fw-instructions summary{padding:10px 14px;cursor:pointer;font-family:"Share Tech Mono";font-size:10px;letter-spacing:.22em;color:var(--cy-1);list-style:none;display:flex;justify-content:space-between;align-items:center;transition:background .2s}
+  .fw-instructions summary:hover{background:rgba(0,196,255,.05);color:#fff}
+  .fw-instructions summary::-webkit-details-marker{display:none}
+  .fw-instructions summary::after{content:"+";font-family:"Share Tech Mono";color:var(--cy-0);font-size:14px;transition:transform .2s}
+  .fw-instructions[open] summary::after{content:"−"}
+  .fw-instructions[open] summary{border-bottom:1px solid var(--line);background:rgba(0,196,255,.05);color:#fff}
+  .fw-instructions .fw-inst-body{padding:14px 16px;font-family:"Share Tech Mono";font-size:11px;color:var(--text);line-height:1.7;letter-spacing:.02em}
+  .fw-instructions .fw-inst-body ol{margin:8px 0 4px 18px;padding:0;display:flex;flex-direction:column;gap:6px}
+  .fw-instructions .fw-inst-body ol li::marker{color:var(--amber);font-family:"Orbitron";font-weight:700}
+  .fw-instructions .fw-inst-body em{color:var(--cy-1);font-style:normal;font-weight:500}
+  .fw-stage{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:start}
+  @media (max-width:760px){.fw-stage{grid-template-columns:1fr}}
+  .fw-svg-wrap{display:flex;justify-content:center;align-items:center;padding:6px;border:1px solid var(--line-dim);background:radial-gradient(circle at center,rgba(0,224,255,.05),transparent 70%)}
+  .fw-svg{width:100%;height:auto;max-width:420px;display:block}
+  .fw-svg .fw-seg{fill:rgba(0,30,55,.5);stroke:var(--line);stroke-width:1;transition:fill .2s}
+  .fw-svg .fw-seg.filled{fill:rgba(0,224,255,.08);stroke:var(--cy-0)}
+  .fw-svg .fw-seg-text{fill:var(--text);font-family:"Share Tech Mono",monospace;font-size:7px;letter-spacing:.04em;pointer-events:none}
+  .fw-svg .fw-center{fill:rgba(255,167,51,.1);stroke:var(--amber);stroke-width:1.5}
+  .fw-svg .fw-center-text{fill:var(--amber);font-family:"Orbitron",sans-serif;font-weight:700;font-size:9px;text-anchor:middle;pointer-events:none}
+  .fw-svg .fw-num{fill:var(--cy-dim);font-family:"Orbitron",sans-serif;font-weight:700;font-size:9px;text-anchor:middle;pointer-events:none}
+  .fw-form{display:flex;flex-direction:column;gap:10px}
+  .fw-title-field{display:flex;flex-direction:column;gap:5px}
+  .fw-title-field label{font-family:"Share Tech Mono";font-size:9px;letter-spacing:.26em;color:var(--amber)}
+  .fw-title-input{background:rgba(255,167,51,.06);border:1px solid var(--amber);color:var(--amber);font-family:"Orbitron",sans-serif;font-weight:700;font-size:13px;padding:9px 12px;outline:none;letter-spacing:.04em;width:100%;text-align:center;text-transform:uppercase}
+  .fw-title-input:focus{box-shadow:0 0 10px rgba(255,167,51,.25)}
+  .fw-stmts{display:flex;flex-direction:column;gap:5px}
+  .fw-stmts-label{font-family:"Share Tech Mono";font-size:9px;letter-spacing:.26em;color:var(--cy-2);margin-bottom:2px}
+  .fw-stmt-row{display:flex;align-items:center;gap:8px}
+  .fw-stmt-num{font-family:"Orbitron",sans-serif;font-weight:700;font-size:10px;color:var(--cy-dim);min-width:18px;text-align:right}
+  .fw-stmt-input{flex:1;background:rgba(0,20,40,.7);border:1px solid var(--line);color:var(--text);font-family:"JetBrains Mono",monospace;font-size:11.5px;padding:7px 10px;outline:none;transition:border-color .2s;line-height:1.4}
+  .fw-stmt-input:focus{border-color:var(--cy-0);box-shadow:0 0 6px rgba(0,224,255,.1)}
+  .fw-stmt-input::placeholder{color:var(--text-dim);font-style:italic}
+  .fw-actions-bar{display:flex;gap:10px;align-items:center;margin-top:6px;flex-wrap:wrap}
+  /* HUB MINIMIZED / EXPANDED STATES */
+  .hub{transition:box-shadow .25s, border-color .25s, max-height .4s cubic-bezier(.2,.8,.2,1)}
+  .hub .h-body{transition:padding .35s ease, gap .35s ease}
+  .hub .h-title{transition:font-size .3s ease}
+  .hub .h-sub,.hub .mini-bar,.hub .h-meta,.hub .j-hub-status{transition:opacity .3s ease, max-height .4s cubic-bezier(.2,.8,.2,1), margin .35s ease;overflow:hidden}
+  .hub.minimized .h-body{padding:9px 13px 10px;gap:0}
+  .hub.minimized .h-title{font-size:13px;line-height:1.2}
+  .hub.minimized .h-sub,.hub.minimized .mini-bar,.hub.minimized .h-meta,.hub.minimized .j-hub-status{opacity:0;max-height:0;margin:0;padding:0;border:none}
+  .hub.minimized .h-head .badge::after{content:" ▸";font-size:9px;color:var(--cy-1)}
+  .hub:not(.minimized) .h-head .badge::after{content:" ▾";font-size:9px;color:var(--amber)}
+  /* HABITS PANEL — TOGGLE FROM CORE */
+  .habits-wrap{transform-origin:50% -200px;transform:translateX(-50%) scale(.05);opacity:0;pointer-events:none;transition:transform .55s cubic-bezier(.34,1.4,.64,1), opacity .4s ease;visibility:hidden}
+  .habits-wrap.visible{transform:translateX(-50%) scale(1);opacity:1;pointer-events:auto;visibility:visible}
+  .core .center{cursor:pointer;transition:transform .35s cubic-bezier(.2,.8,.2,1)}
+  .core .center:hover{filter:brightness(1.15)}
+  .core .center.active{box-shadow:inset 0 0 100px rgba(255,167,51,.3),0 0 80px rgba(255,167,51,.55) !important;border-color:var(--amber) !important}
+  .core .center .pct{transition:color .3s ease, text-shadow .3s ease}
+  .core .center.active .pct{color:var(--amber) !important;text-shadow:0 0 18px rgba(255,167,51,.7) !important}
+  .core .center::before{content:none}
+  .core .center.active::before{content:none}
+  /* LOGIN GATE */
+  .auth-gate{position:fixed;inset:0;z-index:9999;background:radial-gradient(ellipse at center,rgba(0,40,75,.96),rgba(2,8,16,.99) 75%);display:flex;align-items:center;justify-content:center;font-family:"JetBrains Mono",monospace;animation:authFade .35s ease}
+  .auth-gate.unlocked{display:none}
+  @keyframes authFade{from{opacity:0}to{opacity:1}}
+  .auth-gate::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);background-size:40px 40px;mask-image:radial-gradient(ellipse at center,#000 30%,transparent 80%);pointer-events:none}
+  .auth-gate::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg, rgba(0,196,255,.03) 0 1px, transparent 1px 3px);pointer-events:none}
+  .auth-box{position:relative;background:linear-gradient(180deg, rgba(8,26,46,.96), rgba(4,17,31,.98));border:1px solid var(--cy-0);box-shadow:0 0 60px rgba(0,224,255,.35),inset 0 0 60px rgba(0,224,255,.08);padding:38px 42px 30px;width:380px;max-width:90vw;display:flex;flex-direction:column;gap:14px;align-items:center;z-index:1}
+  .auth-box::before{content:"";position:absolute;inset:6px;border:1px solid var(--line);pointer-events:none}
+  .auth-corner{position:absolute;width:13px;height:13px;border:1px solid var(--cy-0);z-index:2}
+  .auth-corner.tl{top:-1px;left:-1px;border-right:none;border-bottom:none}
+  .auth-corner.tr{top:-1px;right:-1px;border-left:none;border-bottom:none}
+  .auth-corner.bl{bottom:-1px;left:-1px;border-right:none;border-top:none}
+  .auth-corner.br{bottom:-1px;right:-1px;border-left:none;border-top:none}
+  .auth-title{font-family:"Orbitron",sans-serif;font-weight:900;font-size:22px;letter-spacing:.18em;color:#fff;text-shadow:0 0 14px rgba(0,224,255,.55);margin-top:4px}
+  .auth-sub{font-family:"Share Tech Mono",monospace;font-size:10px;letter-spacing:.32em;color:var(--cy-1);margin-bottom:10px}
+  #authInput{background:rgba(0,20,40,.7);border:1px solid var(--cy-0);color:var(--cy-0);font-family:"Orbitron",sans-serif;font-weight:700;font-size:18px;padding:14px 16px;width:100%;outline:none;letter-spacing:.4em;text-align:center;transition:box-shadow .2s, border-color .2s}
+  #authInput:focus{box-shadow:0 0 18px rgba(0,224,255,.3);border-color:var(--cy-1)}
+  #authBtn{background:transparent;border:1px solid var(--amber);color:var(--amber);padding:10px 20px;font-family:"Share Tech Mono",monospace;font-size:11px;letter-spacing:.32em;cursor:pointer;width:100%;transition:all .2s}
+  #authBtn:hover{background:rgba(255,167,51,.12);box-shadow:0 0 14px rgba(255,167,51,.35)}
+  .auth-error{font-family:"Share Tech Mono",monospace;font-size:10px;letter-spacing:.22em;color:var(--red);min-height:14px;text-align:center}
+  .auth-error.shake{animation:authShake .4s}
+  @keyframes authShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+</style>
+</head>
+<body>
+<div class="auth-gate" id="authGate">
+  <div class="auth-box">
+    <span class="auth-corner tl"></span><span class="auth-corner tr"></span><span class="auth-corner bl"></span><span class="auth-corner br"></span>
+    <div class="auth-title">IDENTITY PRO</div>
+    <div class="auth-sub">// AUTHENTICATED ACCESS REQUIRED</div>
+    <input type="password" id="authInput" placeholder="••••••••" autocomplete="off" autofocus>
+    <button id="authBtn">▸ ENTER</button>
+    <div class="auth-error" id="authError">&nbsp;</div>
+  </div>
+</div>
+<div class="stage">
+  <header class="topbar">
+    <div class="l">
+      <span class="pill">G-IDENTITY</span>
+      <span>OS // 4-LAYER OPERATING SYSTEM</span>
+      <span class="pill warn blink">PHASE 1 ACTIVE</span>
+    </div>
+    <div class="r">
+      <span id="dateLabel">—</span>
+      <span class="clock" id="clock">00:00:00</span>
+      <span class="pill">SETTLED.AUTHORITY</span>
+    </div>
+  </header>
+  <div class="northstar">NORTH STAR // <b>$110,000 / MONTH</b> · FIRST CLASS · SCOTTSDALE · TRX · FREEDOM</div>
+  <aside class="side left">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="head"><span>INCOME STREAMS // TARGET LOCK</span><span class="dot"></span></div>
+    <div class="body">
+      <div class="id-card"><span class="label">PHASE 1 IDENTITY</span>I am a consistently funded trader. My edge is proven. I follow my rules without negotiation.</div>
+      <div class="meter" data-stream="prop"><div class="row"><span>PROP TRADING</span><span class="val"><span class="cur">$0</span> / $40K</span></div><div class="bar"><div class="ticks"></div><div class="fill" style="width:0%"></div></div></div>
+      <div class="meter" data-stream="live"><div class="row"><span>LIVE ACCOUNT</span><span class="val"><span class="cur">$0</span> / $20K</span></div><div class="bar"><div class="ticks"></div><div class="fill" style="width:0%"></div></div></div>
+      <div class="meter" data-stream="digital"><div class="row"><span>DIGITAL PRODUCTS</span><span class="val"><span class="cur">$0</span> / $50K</span></div><div class="bar"><div class="ticks"></div><div class="fill" style="width:0%"></div></div></div>
+      <div class="total-row meter"><div class="row"><span>TOTAL // MONTHLY</span><span class="val"><span id="totCur">$0</span> / $110K</span></div><div class="bar amber"><div class="ticks"></div><div class="fill" id="totFill" style="width:0%"></div></div><button id="editIncome" style="margin-top:10px;background:transparent;border:1px solid var(--line);color:var(--cy-1);padding:7px;font-family:'Share Tech Mono';font-size:10px;letter-spacing:.2em;cursor:pointer;width:100%">▸ UPDATE STREAM VALUES</button></div>
+      <div style="border-top:1px dashed var(--line);padding-top:12px;font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);line-height:1.55"><span style="color:var(--cy-2);letter-spacing:.18em">DAILY USE //</span><br>Evening visualization. Phase milestone review weekly. Anchor return when 3D lags.</div>
+    </div>
+  </aside>
+  <aside class="side right">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="head"><span>ROADMAP // 24-MONTH PHASE LOCK</span><span class="dot"></span></div>
+    <div class="body">
+      <div class="phase-list" id="phaseList"></div>
+      <div style="border:1px solid var(--amber);background:linear-gradient(180deg, rgba(255,167,51,.06), transparent);padding:12px;font-family:'Share Tech Mono';font-size:10.5px;color:var(--amber-2);line-height:1.55"><span style="font-size:9px;letter-spacing:.3em;color:var(--amber);display:block;margin-bottom:6px">SHADOW WATCH // PHASE 1</span><div>· Hesitation Before Entry</div><div>· Identity Collapse After Loss</div></div>
+      <div style="border-top:1px dashed var(--line);padding-top:12px;font-family:'Share Tech Mono';font-size:10px;color:var(--text-dim);line-height:1.55"><span style="color:var(--cy-2);letter-spacing:.18em">PROTOCOL //</span><br>L1 Identity → L2 State → L3 Action → L4 Anchor. <b style="color:var(--cy-0)">Never skip levels.</b></div>
+    </div>
+  </aside>
+  <main class="hubstage">
+    <div class="satellites" id="satellites"></div>
+    <div class="core">
+      <div class="ring r1 spin"></div><div class="ring r2 spin-rev"></div><div class="ring r3 spin"></div><div class="ring r4"></div>
+      <div class="ring r1"><div class="arc-amber"></div></div><div class="ring r3"><div class="arc"></div></div>
+      <div class="center"><div class="title">DAILY<br>OPERATING<br>PROTOCOL</div><div class="pct" id="dayPct">0<small>%</small></div><div class="sub" id="dayStat">0 / 0 EXECUTED</div></div>
+    </div>
+  </main>
+  <div class="habits-wrap">
+    <div class="habits-head"><span>DAILY HABITS // ALIGNED PROTOCOL</span><span class="stats" id="habitsStats">0 / 10 EXECUTED · 0%</span></div>
+    <div class="habits" id="habits"></div>
+    <div class="habits-foot">
+      <button class="todo-btn" id="todoOpenBtn"><span class="td-dot"></span><span>TO DO LIST</span><span class="td-count" id="todoBtnCount">0</span></button>
+    </div>
+  </div>
+  <footer class="bottombar">
+    <div class="bb-label">ROADMAP // PHASE FLOW ▸</div>
+    <div class="roadmap" id="roadmapBar"></div>
+  </footer>
+</div>
+<div class="modal-bg" id="modal">
+  <div class="modal">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="m-head"><div style="display:flex;align-items:center;gap:18px"><span class="layer-badge" id="mLayer">L?</span><span class="ttl" id="mTitle">—</span></div><span class="close" id="mClose">[ CLOSE × ]</span></div>
+    <div class="m-body" id="mBody"></div>
+  </div>
+</div>
+<div class="todo-modal-bg" id="todoModal">
+  <div class="todo-modal">
+    <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+    <div class="todo-head">
+      <div class="ttl"><span class="badge">TASKS //</span><span>OPERATING TO-DO</span></div>
+      <div style="display:flex;align-items:center;gap:18px">
+        <span class="meta" id="todoTotalMeta">0 OPEN · 0 COMPLETE</span>
+        <span class="close" id="todoClose">[ CLOSE × ]</span>
+      </div>
+    </div>
+    <div class="todo-tabs" id="todoTabs"></div>
+    <div class="todo-body" id="todoBody"></div>
+  </div>
+</div>
+<script>
+const HABITS=[
+  {id:'h1',layer:'L1',text:'AM Anchor'},
+  {id:'h2',layer:'L2',text:'Coherent Focus'},
+  {id:'h3',layer:'L3',text:'Focus Wheel'},
+  {id:'h4',layer:'L3',text:'Matrix Protocol'},
+  {id:'h5',layer:'L3',text:'Market Journal'},
+  {id:'h6',layer:'L2',text:'Midday State Check'},
+  {id:'h11',layer:'L2',text:'Gym Time'},
+  {id:'h7',layer:'L3',text:'Build Block 90m'},
+  {id:'h8',layer:'L1',text:'Shadow Check'},
+  {id:'h9',layer:'L4',text:'PM Visual Embodiment'},
+  {id:'h10',layer:'L2',text:'PM Anchor'}
+];
+const HUBS=[
+  {id:'L1',position:'h1',tag:'LAYER 01',title:'IDENTITY CORE',sub:'Who you are being is the ceiling everything else operates within.',use:'MORNING ANCHOR · PRE-DECISION SHADOW CHECK',intro:'Identity is the source layer. Every state, action, and outcome downstream reflects who you are being. The work here is becoming, not getting.',objectives:[
+    {title:'Who I Am Being',daily:'MORNING IDENTITY ANCHOR · BEFORE SESSION',actions:[{a:'Speak the full identity statement aloud',why:'Reality is identity-based. The internal state is what the external world reflects. Saying it out loud installs the frequency before the day starts.'},{a:'Confirm: "I am a consistently funded trader. My edge is proven. I follow my rules without negotiation."',why:'Phase 1 identity. Until this is the default state, the external results will lag. Speak it as already-true.'},{a:'Body posture check — drop into Settled Authority before stepping to the desk',why:'Identity is felt before it is thought. The body must sign off on the new self-concept or the old one runs the session.'}]},
+    {title:'Belief Systems Audit',daily:'WEEKLY · OR WHEN A NEGATIVE BELIEF SURFACES',actions:[{a:'List the operating beliefs running today (the ones you actually act from)',why:'You cannot recode what you cannot see. The unconscious belief is the one that runs the trade.'},{a:'Tag each belief: serves the new identity / does not serve',why:'Beliefs are not true or false. They are aligned or misaligned with who I am becoming.'},{a:'Replace one misaligned belief with the new-identity version, in writing',why:'Direct identity shift requires the recode to be embodied — language, then belief, then behaviour.'}]},
+    {title:'Self-Concept Rewrites',daily:'MORNING AFFIRMATION · SPEAK ALL ALOUD · CORRECT AS NEEDED',actions:[
+      {a:'I am a consistently funded trader. My edge is proven. I follow my rules without negotiation.',why:'OLD // "I am someone trying to become a funded trader." The new identity is already the result. Phase 1 install — speak as already-true, not aspirational.'},
+      {a:'I am someone who executes with clean conviction the moment the model presents.',why:'OLD // "I hesitate at entry — I need one more confirmation." Hesitation is a Phase 1 shadow. The recoded operator trusts the system that has already been validated.'},
+      {a:'I am someone who absorbs loss as data and returns to the next setup unchanged.',why:'OLD // "When I lose, I collapse. I doubt my edge." Identity Collapse After Loss is the second Phase 1 shadow. The operator I am does not negotiate identity with P&L.'},
+      {a:'I am someone whose state precedes stimulus. Settled Authority is my default.',why:'OLD // "I react to the chart. I let the market set my nervous system." State-first is non-negotiable. The chart does not get to dictate who I am.'},
+      {a:'I am someone who runs three streams. Prop, live, digital — already in motion.',why:'OLD // "I have one income source and need to build the others." The single-stream self-concept hard-caps revenue. I broadcast the multi-stream operator now.'},
+      {a:'I am someone for whom money is the natural exhaust of aligned action.',why:'OLD // "I have to grind for money. Money is hard." The frequency of having ≠ the frequency of grinding. I act from already-have.'},
+      {a:'I am someone whose default is first class, Scottsdale, and freedom of time.',why:'OLD // "Those things are for later, when I make it." The lifestyle is not a reward — it is the broadcast that creates the income.'},
+      {a:'I am someone who closes the platform when the edge is gone. No revenge. No exception.',why:'OLD // "One more trade — I can recover this." Revenge is the old identity speaking. The professional protects the operator over the day.'},
+      {a:'I am someone whose income is decoupled from my screen time.',why:'OLD // "If I stop trading, the money stops." Digital products and live capital are leverage. I am the system, not the input.'},
+      {a:'I am someone with nothing to prove. My state is the broadcast. The 3D follows.',why:'OLD // "I need to prove this works. I need to show I made it." Proving is shadow energy. The settled version of me is post-proof.'},
+      {a:'I am someone who knows drawdown is the cost of doing business — handled, expected, neutral.',why:'OLD // "Drawdown means I am failing." Drawdown is the math, not the meaning. I do not let math become identity.'},
+      {a:'I am someone who already lives the Day in the Life. The 3D is catching up.',why:'OLD // "I am working toward that life." The life exists now in the field. Daily action is alignment, not chasing.'}
+    ]},
+    {title:'Shadow Patterns',daily:'BEFORE ANY HIGH-STAKES DECISION',actions:[{a:'Run a shadow check before entry: am I about to act from fear, scarcity, proving, revenge?',why:'Distortion detection is the gate. Acting from shadow guarantees the old result regardless of strategy.'},{a:'Watch this phase\'s shadows: Hesitation Before Entry · Identity Collapse After Loss',why:'Phase 1 has specific failure modes. Naming them in advance is half the cure.'},{a:'If shadow is detected: pause, regulate, recode, then act — or don\'t act',why:'Protocol over preference. The aligned version doesn\'t force a trade out of distortion.'}]},
+    {title:'Identity Journal · Shadow + Achievable',daily:'MORNING + EVENING · OR WHEN A SHADOW SURFACES',isIdentityJournal:true,actions:[]},
+    {title:'Focus Wheel · Coherence Around a Desire',daily:'AS NEEDED · WHEN A DESIRE FEELS DISTANT',isFocusWheel:true,actions:[]}
+  ]},
+  {id:'L2',position:'h2',tag:'LAYER 02',title:'NERVOUS SYSTEM & ENERGY',sub:'State is the edge. A regulated nervous system is the most valuable trading tool.',use:'MORNING · MIDDAY · EVENING ANCHOR',intro:'A dysregulated nervous system cannot execute an aligned protocol. State precedes strategy. Coherence is the daily practice that holds the rest of the system in place.',objectives:[
+    {title:'Settled Authority State',daily:'BEFORE EVERY SESSION · ENTERED INTENTIONALLY',actions:[{a:'Slow exhale-led breath until the chest opens and the jaw drops',why:'Settled Authority is not effort. It is the absence of urgency. The breath is the doorway.'},{a:'Confirm: shoulders back, weight grounded, eyes soft, no grip on outcome',why:'The body is the broadcast. If the broadcast is anxious, the entries are anxious.'},{a:'Hold the state for 60 seconds before touching the chart',why:'State must precede stimulus. Otherwise the chart triggers the old nervous-system pattern instantly.'}]},
+    {title:'Coherence Work · Daily',daily:'5–10 MIN · MORNING · NON-NEGOTIABLE',actions:[{a:'Sit. Slow breath. Drop into the field of being, not wanting',why:'Wanting confirms absence. Being confirms already-have. The frequency is opposite.'},{a:'Hold the felt sense of the actualized identity — funded, free, fully expressed',why:'Coherence work is rehearsing the end-state nervous system, so it becomes today\'s baseline.'},{a:'Anchor a single image from Day in the Life #1 and feel it as memory, not goal',why:'Memory frequency is "already true." Goal frequency is "not yet." Reality matches what you broadcast.'}]},
+    {title:'Emotional Patterns · Track & Respond',daily:'CONTINUOUS · MIDDAY CHECK MANDATORY',actions:[{a:'Name the current state: aligned (calm/clear/expanded) or distorted (rushed/tight/proving)',why:'You cannot regulate what you have not named. Naming creates the meta-position.'},{a:'If distorted: stop. Breath, walk, water, posture reset before any action',why:'A distorted state acting on a clean setup still produces a distorted result.'},{a:'If aligned: confirm and continue — do not over-monitor',why:'Over-checking the state collapses the state. Trust the regulation once it\'s established.'}]},
+    {title:'Frequency · Being vs Wanting',daily:'EVENING · ANCHOR BEFORE SLEEP',actions:[{a:'Close the day in the frequency of having, not the day\'s actual P&L',why:'Sleep encodes the dominant frequency. End on the identity, not the score.'},{a:'Visualize one outcome reference scene as already lived',why:'The 4D anchors the 3D. Repetition collapses the gap between the two.'},{a:'Release the day. No re-litigation. No rehashing trades.',why:'Re-running the day in distortion overwrites the coherence work. Let the day go cleanly.'}]}
+  ]},
+  {id:'L3',position:'h3',tag:'LAYER 03',title:'EXECUTION',sub:'The identity in motion. Protocol is not restriction — it is who you are.',use:'PRE-MARKET · SESSION · MIDDAY · EVENING',intro:'Execution is identity rendered into action. The Matrix Protocol, the daily routines, the discipline frameworks — none of it is rules imposed from outside. It is the natural behaviour of the version of me that already has this.',objectives:[
+    {title:'Matrix Protocol · Trading Execution',daily:'EVERY SESSION · NO DEVIATION · NO NEGOTIATION',actions:[
+      {a:'Time — confirm session is within a valid Kill Zone or Time Macro window',why:'Time is the most powerful and most overlooked confluence in the model. Smart Money does not deliver randomly — it operates within specific time-based windows where liquidity engineering and displacement occur with the highest probability. Trading outside these windows is not discipline, it is guessing. Valid Kill Zones: London Open (2:00–5:00 AM EST) — where the daily high or low is frequently set; New York Open (7:00–9:30 AM EST) — the highest-volume window and where the majority of funded-account setups occur; London Close (10:00 AM–12:00 PM EST) — where reversals and final displacement often complete. Time Macro windows are 20-minute precision delivery slots nested inside these Kill Zones: 8:50–9:10 AM, 9:50–10:10 AM, and 10:50–11:10 AM EST. These are the windows where institutional order flow most consistently arrives. If price is at a valid POI with SMT and the time is wrong — close the platform. Time is the first filter. A clean setup at the wrong time is not a setup. This confluence alone eliminates the majority of distortion entries.'},
+      {a:'SMT — confirm Smart Money Tool divergence on correlated pairs',why:'SMT is the primary technical filter. No SMT, no setup. Skipping this step is the single highest-frequency distortion entry vector in the protocol.'},
+      {a:'POI — mark Point of Interest only at validated zones',why:'A POI is not a guess. It is a structurally confirmed level where the model expects Smart Money displacement.'},
+      {a:'Displacement — wait for clean impulsive break',why:'Displacement is the proof of intent. Without it, the trade is a counter-trend prayer.'},
+      {a:'CSD — Change in State of Delivery confirmed before entry',why:'CSD is the handoff signal. Entering before CSD is entering before the market has agreed.'},
+      {a:'Entry — execute the model. No improvisation.',why:'Improvisation is old-identity creativity in a system that requires identity-as-protocol.'}
+    ]},
+    {title:'Daily Routines · Session Architecture',daily:'MORNING · SESSION · MIDDAY · EVENING',actions:[{a:'Pre-market review: bias, levels, narrative, A+ scenario only',why:'A+ only protects the identity. B-grade trades degrade the self-concept of a clean operator.'},{a:'Session: protocol-locked execution, no chart babysitting between setups',why:'Babysitting builds urgency. Urgency is shadow. Step away between valid windows.'},{a:'Midday: state check + journal entry capture',why:'Midday is when discipline drifts. Re-anchor to identity before afternoon session.'},{a:'Evening: trade review on process only, not P&L',why:'Process-only review preserves the operator identity regardless of the daily score.'}]},
+    {title:'Trade Journal · Process Only',daily:'EVERY SESSION · BEFORE CLOSING THE LAPTOP',actions:[{a:'Log: setup, execution adherence, state pre-during-post',why:'The journal is the receipt of identity. P&L is downstream of these three.'},{a:'Mark each trade: aligned protocol or distortion entry',why:'Honesty here compounds. Self-deception in the journal guarantees a Phase 1 stall.'},{a:'No P&L commentary. No emotional venting. Process language only.',why:'The journal is a tool to reinforce the operator. Emotional dumping breaks the frame.'}]},
+    {title:'Digital Empire Block',daily:'MIN 90 MIN · WEEKDAYS · CONCEPT STAGE',actions:[{a:'Time-block 90 min minimum, distractions out',why:'Phase 1 digital products are at concept stage. Without daily input, the third stream never starts.'},{a:'Today\'s output: one concrete artifact (outline / page / asset)',why:'Concept work without an artifact is daydreaming. The block ends with something on disk.'},{a:'Build for the identity that already runs a $50K/month digital business',why:'The version of me with the result wouldn\'t hesitate or perfectionism-stall. Build the way they would.'}]},
+    {title:'Discipline Frameworks',daily:'OPERATING SYSTEM-WIDE · ALWAYS ON',actions:[{a:'Protocol Over Preference — preference is the old identity\'s voice',why:'When preference and protocol conflict, preference is the regression to the prior self.'},{a:'One Focus Window — single highest-value action at a time',why:'Fragmentation is identity diffusion. One window keeps the operator coherent.'},{a:'Process Accountability — measure adherence, not outcomes',why:'Outcomes lag. Adherence is the only daily-controllable signal in Phase 1.'}]},
+    {title:'Trade Journal · Daily Log',daily:'EVERY SESSION · PRE · LIVE · OPERATIONAL REVIEW',isJournal:true,actions:[]}
+  ]},
+  {id:'L4',position:'h4',tag:'LAYER 04',title:'VISION & TARGETS',sub:'The 3D always lags. These are anchors to return to — not wishes, already-true realities.',use:'EVENING VISUALIZATION · WEEKLY MILESTONE REVIEW',intro:'Vision is not motivation. Vision is the already-true reality that the 3D is in the process of catching up to. The work is to broadcast it daily, not to wait for it.',objectives:[
+    {title:'Financial Targets · $110K / Month',daily:'EVENING ANCHOR · CONFIRMED, NOT WISHED',actions:[{a:'$40K/mo Prop Trading — Phase 1 funded, scale across firms',why:'Prop is the fastest validation loop. Pass evals → payouts → identity confirmed by external system.'},{a:'$20K/mo Live Account — seeded after Phase 1',why:'Live is the personal capital expression. Different identity layer than prop — owner, not operator.'},{a:'$50K/mo Digital Products — concept now, launched by Phase 3',why:'Digital is the freedom multiplier. Decouples income from screen time and location.'}]},
+    {title:'Lifestyle Targets · Already-True Anchors',daily:'EVENING VISUALIZATION · DAILY ENVIRONMENT',actions:[{a:'First class travel — the default, not the upgrade',why:'Lifestyle is broadcast. First class is the version of me that doesn\'t negotiate with comfort or time.'},{a:'Scottsdale second residence — environment shapes identity',why:'Place is identity. Scottsdale is the visual-frequency match for the operator I am becoming.'},{a:'RAM TRX — daily proof point of the threshold crossed',why:'A daily-visible artifact of the new identity. Every drive is identity reinforcement.'},{a:'Freedom of time and location — the underlying outcome',why:'All financial targets exist to produce this. If the targets hit but freedom doesn\'t, the targets were wrong.'}]},
+    {title:'Fitness Targets · Body As Instrument',daily:'EXECUTION-LEVEL · THE BODY IS THE BROADCAST',actions:[{a:'Train as the version that already has the body',why:'You don\'t train to earn the body. You train because that\'s what this version does.'},{a:'The body is the carrier wave for state regulation',why:'A weak nervous system in a weak body is a Phase 1 ceiling. Both layers reinforce.'},{a:'Daily protein, sleep, sun, lift — non-negotiables',why:'These are not health hacks. They are the operating substrate for L1 and L2 to function.'}]},
+    {title:'Outcome References · Anchors When 3D Lags',daily:'WHEN THE EXTERNAL IS BEHIND THE INTERNAL',actions:[{a:'Return to specific Day in the Life #1 scenes',why:'Specific scenes hold frequency better than abstract goals. The lived detail is the anchor.'},{a:'Feel the scene as memory, not future',why:'Memory frequency is "is." Future frequency is "isn\'t yet." The 3D mirrors whichever is dominant.'},{a:'Hold for 60–120 seconds, then release without strain',why:'Anchoring is not affirmation. It\'s a clean broadcast pulse. Then back to embodied action.'}]}
+  ]}
+];
+const PHASES=[
+  {n:'01',t:'Funded & Locked In',w:'Months 0–2',f:'Pass 5 evals, first payouts',sig:'Protocol adherence daily',state:'active'},
+  {n:'02',t:'Stacking & Seeding',w:'Months 2–5',f:'Scale prop, seed live, crystallize product',sig:'$10K+ in payouts'},
+  {n:'03',t:'Launch & Compound',w:'Months 5–9',f:'First product live, first $5K digital month',sig:'Multiple streams active'},
+  {n:'04',t:'Scale & Systemize',w:'Months 9–15',f:'Streams compounding, Scottsdale, TRX',sig:'$30K+/month total'},
+  {n:'05',t:'Actualization',w:'Months 15–24',f:'$110K/mo, first class lifestyle, full expression',sig:'The story is the life'}
+];
+const PHASE_GOALS=[
+  {intro:'Phase 1 is the identity install. External proof is 5 funded accounts + first payouts. Internal proof is 30+ days of zero-deviation protocol. Both are required to graduate.',goals:[
+    {title:'Pass 5 prop firm evaluations',why:'Five passes is not luck — it is the edge proven repeatable across accounts and conditions.',items:[{id:'p1g1i1',t:'Evaluation #1 passed'},{id:'p1g1i2',t:'Evaluation #2 passed'},{id:'p1g1i3',t:'Evaluation #3 passed'},{id:'p1g1i4',t:'Evaluation #4 passed'},{id:'p1g1i5',t:'Evaluation #5 passed'}]},
+    {title:'First payouts received',why:'The first payout is the threshold-crossing event. External proof the new identity is producing.',items:[{id:'p1g2i1',t:'First withdrawal initiated'},{id:'p1g2i2',t:'First payout cleared to bank'},{id:'p1g2i3',t:'Payout cycle established (recurring)'}]},
+    {title:'Protocol adherence — 30 day lock',why:'Adherence is the only Phase 1 daily-controllable signal. 30 consecutive days is the install duration.',items:[{id:'p1g3i1',t:'30 consecutive days zero-deviation Matrix Protocol'},{id:'p1g3i2',t:'Trade journal complete every session for 30 days'},{id:'p1g3i3',t:'Morning coherence work daily for 30 days'},{id:'p1g3i4',t:'Pre-market review every trading day for 30 days'}]},
+    {title:'Identity install: "consistently funded trader"',why:'The result lags the identity. The identity must be installed before Phase 2 can compound on it.',items:[{id:'p1g4i1',t:'Identity statement spoken aloud daily'},{id:'p1g4i2',t:'Phase 1 shadows named: Hesitation Before Entry · Identity Collapse After Loss'},{id:'p1g4i3',t:'Recoded response to losses (no identity collapse)'},{id:'p1g4i4',t:'Settled Authority state default before every session'}]},
+    {title:'Digital empire — concept stage',why:'Phase 3 product launch requires concept work to begin in Phase 1. Daily input or the third stream never starts.',items:[{id:'p1g5i1',t:'Concept defined in writing'},{id:'p1g5i2',t:'Target audience identified'},{id:'p1g5i3',t:'First MVP outline drafted'},{id:'p1g5i4',t:'Daily 90-min block streak established'}]}
+  ]},
+  {intro:'Phase 2 is the compounding layer. Prop scales, live capital seeds, the digital product crystallizes.',goals:[
+    {title:'Scale prop trading',why:'Single-firm risk is fragility. Multiple firms = redundancy + accelerated capital throughput.',items:[{id:'p2g1i1',t:'Active across 2+ prop firms'},{id:'p2g1i2',t:'Combined funded capital ≥ $200K'},{id:'p2g1i3',t:'$10K+ in cumulative payouts received'},{id:'p2g1i4',t:'Drawdown discipline maintained across all firms'}]},
+    {title:'Seed live account',why:'Live capital is a different identity layer than prop. Owner, not just operator.',items:[{id:'p2g2i1',t:'$20K+ live capital deposited'},{id:'p2g2i2',t:'First live trade executed in protocol'},{id:'p2g2i3',t:'First profitable live month'},{id:'p2g2i4',t:'Live account integrated into journal'}]},
+    {title:'Crystallize digital product',why:'Phase 3 launch requires the product to be ready, not a concept.',items:[{id:'p2g3i1',t:'Product validated with target audience'},{id:'p2g3i2',t:'Pricing locked'},{id:'p2g3i3',t:'Sales page drafted'},{id:'p2g3i4',t:'First 100 audience members built'}]},
+    {title:'Identity integration: "I run multiple streams"',why:'The single-income self-concept will hard-cap revenue. Self-concept must expand before income can.',items:[{id:'p2g4i1',t:'Self-concept rewrite complete'},{id:'p2g4i2',t:'Old "single income" identity retired in writing'},{id:'p2g4i3',t:'Time-allocation matches multi-stream operator'}]}
+  ]},
+  {intro:'Phase 3 is the launch and compound. The third stream goes live. Trading capital scales.',goals:[
+    {title:'First digital product live',why:'Until it is live, it is concept. The threshold is the launch, not the perfection.',items:[{id:'p3g1i1',t:'Product launched publicly'},{id:'p3g1i2',t:'First sale received'},{id:'p3g1i3',t:'First $5K month from digital'},{id:'p3g1i4',t:'Sustained sales pipeline (≥10 sales/mo)'}]},
+    {title:'Trading scaled',why:'Combined trading at $30K+/mo proves the engine, not a fluke.',items:[{id:'p3g2i1',t:'Combined trading $30K+/month'},{id:'p3g2i2',t:'Live account compounding'},{id:'p3g2i3',t:'Position size scaled with identity (no anchoring)'}]},
+    {title:'Multiple streams active',why:'All three streams generating revenue is the structural proof.',items:[{id:'p3g3i1',t:'Prop revenue confirmed monthly'},{id:'p3g3i2',t:'Live revenue confirmed monthly'},{id:'p3g3i3',t:'Digital revenue confirmed monthly'}]},
+    {title:'Lifestyle integration begun',why:'The lifestyle is not the reward — it is part of the identity broadcast.',items:[{id:'p3g4i1',t:'First class flight booked & taken'},{id:'p3g4i2',t:'Scottsdale visit/scout completed'},{id:'p3g4i3',t:'Daily environment upgraded (workspace, gear)'}]}
+  ]},
+  {intro:'Phase 4 is scale and systemize. The streams compound. Scottsdale becomes the residence.',goals:[
+    {title:'Streams compounding to $30K+/month',why:'Compounding requires systems. Without documentation, scale produces collapse.',items:[{id:'p4g1i1',t:'$30K+/month total achieved consistently'},{id:'p4g1i2',t:'Trading systems documented (playbook live)'},{id:'p4g1i3',t:'Digital fulfillment systems documented'},{id:'p4g1i4',t:'Time freedom: required screen time < threshold'}]},
+    {title:'Scottsdale second residence',why:'Place shapes identity. Scottsdale is the visual-frequency match.',items:[{id:'p4g2i1',t:'Property identified'},{id:'p4g2i2',t:'Lease or purchase signed'},{id:'p4g2i3',t:'Move complete'},{id:'p4g2i4',t:'Daily life established in residence'}]},
+    {title:'RAM TRX acquired',why:'A daily-visible artifact of the threshold crossed.',items:[{id:'p4g3i1',t:'TRX purchased'},{id:'p4g3i2',t:'Daily driver — primary vehicle'}]},
+    {title:'Identity at threshold — operating from "already arrived"',why:'Phase 4 is when internal state and external evidence align.',items:[{id:'p4g4i1',t:'No more "becoming" language — only "being"'},{id:'p4g4i2',t:'Daily routines reflect lifestyle, not effort'},{id:'p4g4i3',t:'Reactive patterns replaced with default coherence'}]}
+  ]},
+  {intro:'Phase 5 is actualization. $110K/mo is the floor, not the goal.',goals:[
+    {title:'$110K / month achieved',why:'The number is the structural proof. The lifestyle, freedom, and expression all rest on this floor.',items:[{id:'p5g1i1',t:'Prop trading $40K/month'},{id:'p5g1i2',t:'Live account $20K/month'},{id:'p5g1i3',t:'Digital products $50K/month'},{id:'p5g1i4',t:'Total $110K+ sustained 3+ months'}]},
+    {title:'First class lifestyle is default',why:'Comfort and time are never negotiated. The identity holds the standard automatically.',items:[{id:'p5g2i1',t:'All travel first class'},{id:'p5g2i2',t:'Comfort never negotiated'},{id:'p5g2i3',t:'Time freedom non-negotiable'}]},
+    {title:'Full expression',why:'The actualized identity does not hide.',items:[{id:'p5g3i1',t:'Public visibility / story established'},{id:'p5g3i2',t:'Mentoring or teaching expression active'},{id:'p5g3i3',t:'Day in the Life #1 lived as default reality'}]}
+  ]}
+];
+const STORE_KEY='identity-pro-os-v1';
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+function loadState(){try{return JSON.parse(localStorage.getItem(STORE_KEY))||{}}catch(e){return{}}}
+function saveState(s){localStorage.setItem(STORE_KEY,JSON.stringify(s))}
+let state=loadState();
+const tk=todayKey();
+state.habits=state.habits||{};state.habits[tk]=state.habits[tk]||{};
+state.income=state.income||{prop:0,live:0,digital:0};
+state.phase=state.phase||1;state.phaseItems=state.phaseItems||{};
+state.journal=state.journal||{};
+state.identityJournal=state.identityJournal||{};
+state.focusWheel=state.focusWheel||{title:'',statements:Array(12).fill('')};
+saveState(state);
+function phaseProgress(idx){const p=PHASE_GOALS[idx];if(!p)return{done:0,total:0,pct:0};let total=0,done=0;p.goals.forEach(g=>g.items.forEach(it=>{total++;if(state.phaseItems[it.id])done++;}));return{done,total,pct:total?Math.round(done/total*100):0};}
+function goalProgress(idx,gi){const g=PHASE_GOALS[idx].goals[gi];let total=g.items.length,done=g.items.filter(i=>state.phaseItems[i.id]).length;return{done,total,pct:total?Math.round(done/total*100):0};}
+function tick(){const d=new Date();const pad=n=>String(n).padStart(2,'0');document.getElementById('clock').textContent=`${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;document.getElementById('dateLabel').textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'2-digit',year:'numeric'}).toUpperCase();}
+setInterval(tick,1000);tick();
+const habitsEl=document.getElementById('habits');
+function renderHabits(){habitsEl.innerHTML='';HABITS.forEach((h,i)=>{const done=!!state.habits[tk][h.id];const el=document.createElement('div');el.className='hbit'+(done?' done':'');el.innerHTML=`<div class="box"></div><span class="layer-tag">${h.layer}</span><span>${h.text}</span>`;el.onclick=()=>{state.habits[tk][h.id]=!done;saveState(state);renderHabits();updateCenter();};habitsEl.appendChild(el);if(i===4||i===9){const brk=document.createElement('div');brk.style.cssText='flex-basis:100%;height:0;margin:0;padding:0;';habitsEl.appendChild(brk);}});}
+function updateCenter(){const total=HABITS.length;const done=HABITS.filter(h=>state.habits[tk][h.id]).length;const pct=Math.round(done/total*100);document.getElementById('dayPct').innerHTML=`${pct}<small>%</small>`;document.getElementById('dayStat').textContent=`${done} / ${total} EXECUTED`;const ss=document.getElementById('habitsStats');if(ss)ss.textContent=`${done} / ${total} EXECUTED · ${pct}%`;}
+function journalFiled(date){const e=state.journal[date||tk];if(!e)return false;return !!(e.pre||e.live||e.technical||e.psychological||e.physiological);}
+function updateL3Indicator(){const el=document.getElementById('l3JournalStatus');if(!el)return;const filed=journalFiled(tk);el.className='j-hub-status '+(filed?'filed':'ready');el.innerHTML=`<span class="jdot"></span><span>JOURNAL · ${filed?'FILED ✓':'READY ▸ LOG TODAY'}</span>`;}
+const sat=document.getElementById('satellites');
+HUBS.forEach(h=>{
+  const div=document.createElement('div');div.className=`hub ${h.position} minimized`;
+  const filed=h.id==='L3'?journalFiled(tk):false;
+  const jStatus=h.id==='L3'?`<div class="j-hub-status ${filed?'filed':'ready'}" id="l3JournalStatus"><span class="jdot"></span><span>JOURNAL · ${filed?'FILED ✓':'READY ▸ LOG TODAY'}</span></div>`:'';
+  div.innerHTML=`<span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span><div class="h-head"><span>${h.tag}</span><span class="badge">${h.id}</span></div><div class="h-body"><div class="h-title">${h.title}</div><div class="h-sub">${h.sub}</div><div class="mini-bar"><div class="mf" style="width:${30+Math.random()*55}%"></div></div><div class="h-meta"><span>${h.objectives.length} OBJECTIVES</span><span>▸ EXPAND</span></div>${jStatus}</div>`;
+  div.onclick=()=>{
+    if(div.classList.contains('minimized')){
+      div.classList.remove('minimized');
+    } else {
+      openHub(h);
+    }
+  };
+  sat.appendChild(div);
+});
+function minimizeAllHubs(){document.querySelectorAll('.hub').forEach(h=>h.classList.add('minimized'));}
+const modal=document.getElementById('modal');
+const mBody=document.getElementById('mBody');
+const mTitle=document.getElementById('mTitle');
+const mLayer=document.getElementById('mLayer');
+function closeModal(){modal.classList.remove('open');minimizeAllHubs();}
+document.getElementById('mClose').onclick=closeModal;
+modal.onclick=(e)=>{if(e.target===modal)closeModal();};
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modal.classList.contains('open'))closeModal();});
+function openHub(h){
+  mTitle.textContent=h.title;mLayer.textContent=h.id;
+  let html=`<div class="m-intro">${h.intro}<br><br><span style="color:var(--amber);font-style:normal;font-size:10px;letter-spacing:.22em">DAILY USE // ${h.use}</span></div>`;
+  h.objectives.forEach((o,i)=>{
+    if(o.isJournal){
+      html+=`<div class="obj"><div class="o-head"><span><b style="color:var(--cy-2);font-family:'Share Tech Mono';font-size:10px;letter-spacing:.2em">OBJ ${String(i+1).padStart(2,'0')} //</b> ${o.title}</span><span class="icon">+</span></div><div class="o-body"><div class="daily">${o.daily}</div><div id="journalContainer"></div></div></div>`;
+    } else if(o.isIdentityJournal){
+      html+=`<div class="obj"><div class="o-head"><span><b style="color:var(--cy-2);font-family:'Share Tech Mono';font-size:10px;letter-spacing:.2em">OBJ ${String(i+1).padStart(2,'0')} //</b> ${o.title}</span><span class="icon">+</span></div><div class="o-body"><div class="daily">${o.daily}</div><div id="identityJournalContainer"></div></div></div>`;
+    } else if(o.isFocusWheel){
+      html+=`<div class="obj"><div class="o-head"><span><b style="color:var(--cy-2);font-family:'Share Tech Mono';font-size:10px;letter-spacing:.2em">OBJ ${String(i+1).padStart(2,'0')} //</b> ${o.title}</span><span class="icon">+</span></div><div class="o-body"><div class="daily">${o.daily}</div><div id="focusWheelContainer"></div></div></div>`;
+    } else {
+      html+=`<div class="obj"><div class="o-head"><span><b style="color:var(--cy-2);font-family:'Share Tech Mono';font-size:10px;letter-spacing:.2em">OBJ ${String(i+1).padStart(2,'0')} //</b> ${o.title}</span><span class="icon">+</span></div><div class="o-body"><div class="daily">${o.daily}</div><div class="actions">`;
+      o.actions.forEach(a=>{html+=`<div class="act"><div class="a-head">${a.a}</div><div class="a-body"><span class="why">REASONING //</span>${a.why}</div></div>`;});
+      html+=`</div></div></div>`;
+    }
+  });
+  mBody.innerHTML=html;
+  mBody.querySelectorAll('.obj .o-head').forEach(head=>{
+    head.onclick=()=>{
+      head.parentElement.classList.toggle('open');
+      const jc=head.parentElement.querySelector('#journalContainer');
+      if(jc&&head.parentElement.classList.contains('open')&&!jc.dataset.rendered){renderJournalObjective(jc);jc.dataset.rendered='1';}
+      const ijc=head.parentElement.querySelector('#identityJournalContainer');
+      if(ijc&&head.parentElement.classList.contains('open')&&!ijc.dataset.rendered){renderIdentityJournalObjective(ijc);ijc.dataset.rendered='1';}
+      const fwc=head.parentElement.querySelector('#focusWheelContainer');
+      if(fwc&&head.parentElement.classList.contains('open')&&!fwc.dataset.rendered){renderFocusWheelObjective(fwc);fwc.dataset.rendered='1';}
+    };
+  });
+  mBody.querySelectorAll('.act .a-head').forEach(head=>{head.onclick=()=>head.parentElement.classList.toggle('open');});
+  const first=mBody.querySelector('.obj');if(first)first.classList.add('open');
+  modal.classList.add('open');
+}
+const phaseListEl=document.getElementById('phaseList');
+const roadmapBar=document.getElementById('roadmapBar');
+PHASES.forEach((p,i)=>{
+  const isActive=(i+1)===state.phase,isDone=(i+1)<state.phase;
+  const row=document.createElement('div');row.className=`phase-row${isActive?' active':''}${isDone?' done':''}`;
+  row.innerHTML=`<div class="idx">${p.n}</div><div class="info"><div class="t">${p.t}</div><div class="s">${p.w} · ${p.f}</div><div class="phase-progress"><div class="pp-bar"><div class="pp-fill" data-pf="${i}"></div></div><div class="pp-meta"><span data-pt="${i}">0%</span><span data-pc="${i}">0/0</span></div></div><div class="sig">SIGNAL · ${p.sig}</div></div><div class="phase-open">▸</div>`;
+  row.onclick=()=>openPhase(i);phaseListEl.appendChild(row);
+  const ph=document.createElement('div');ph.className=`phase${isActive?' active':''}${isDone?' done':''}`;
+  ph.innerHTML=`<div><span class="p-num">PHASE ${p.n}</span><div class="p-title">${p.t}</div></div><div class="phase-tab-bar"><div class="ptb-fill" data-tf="${i}"></div></div><div class="p-win"><span data-tw="${i}">${p.w}</span> · <span class="p-pct" data-tp="${i}">0%</span></div>`;
+  ph.onclick=()=>openPhase(i);roadmapBar.appendChild(ph);
+});
+function renderPhases(){
+  phaseListEl.querySelectorAll('.phase-row').forEach((r,i)=>{r.classList.toggle('active',(i+1)===state.phase);r.classList.toggle('done',(i+1)<state.phase);const pr=phaseProgress(i);const f=r.querySelector(`[data-pf="${i}"]`);if(f)f.style.width=pr.pct+'%';const t=r.querySelector(`[data-pt="${i}"]`);if(t)t.textContent=pr.pct+'%';const c=r.querySelector(`[data-pc="${i}"]`);if(c)c.textContent=pr.done+'/'+pr.total;});
+  roadmapBar.querySelectorAll('.phase').forEach((r,i)=>{r.classList.toggle('active',(i+1)===state.phase);r.classList.toggle('done',(i+1)<state.phase);const pr=phaseProgress(i);const f=r.querySelector(`[data-tf="${i}"]`);if(f)f.style.width=pr.pct+'%';const t=r.querySelector(`[data-tp="${i}"]`);if(t)t.textContent=pr.pct+'%';});
+}
+function openPhase(idx){
+  const meta=PHASES[idx],p=PHASE_GOALS[idx],pr=phaseProgress(idx);
+  mTitle.textContent=meta.t.toUpperCase();mLayer.textContent='PHASE '+meta.n;
+  let html=`<div class="phase-summary"><div class="ps-meta"><div><span class="ps-l">WINDOW</span><span class="ps-v">${meta.w}</span></div><div><span class="ps-l">FOCUS</span><span class="ps-v">${meta.f}</span></div><div><span class="ps-l">SIGNAL</span><span class="ps-v">${meta.sig}</span></div></div><div class="ps-progress"><div class="ps-pct" id="psPct">${pr.pct}<small>%</small></div><div class="ps-bar-wrap"><div class="ps-bar"><div class="ps-fill" id="psFill" style="width:${pr.pct}%"></div></div><div class="ps-stat" id="psStat">${pr.done} / ${pr.total} ITEMS COMPLETE</div></div><button class="lock-phase" id="lockPhase">${(idx+1)===state.phase?'■ LOCKED AS CURRENT':'▸ LOCK AS CURRENT PHASE'}</button></div></div><div class="m-intro">${p.intro}</div>`;
+  p.goals.forEach((g,gi)=>{const gp=goalProgress(idx,gi);html+=`<div class="goal" data-gi="${gi}"><div class="g-head"><div class="g-titlewrap"><span class="g-marker">GOAL ${String(gi+1).padStart(2,'0')} //</span><span class="g-title">${g.title}</span></div><div class="g-progress"><div class="g-pbar"><div class="g-pfill" style="width:${gp.pct}%"></div></div><span class="g-pct">${gp.pct}%</span><span class="icon">+</span></div></div><div class="g-body"><div class="g-why"><span class="why-l">REASONING //</span> ${g.why}</div><div class="g-items">${g.items.map(it=>`<label class="g-item${state.phaseItems[it.id]?' done':''}" data-id="${it.id}"><span class="g-box"></span><span class="g-text">${it.t}</span></label>`).join('')}</div></div></div>`;});
+  mBody.innerHTML=html;
+  mBody.querySelectorAll('.goal .g-head').forEach(h=>{h.onclick=()=>h.parentElement.classList.toggle('open');});
+  const goals=mBody.querySelectorAll('.goal');let opened=false;
+  goals.forEach((gEl,gi)=>{const gp=goalProgress(idx,gi);if(!opened&&gp.pct<100){gEl.classList.add('open');opened=true;}});
+  if(!opened&&goals[0])goals[0].classList.add('open');
+  mBody.querySelectorAll('.g-item').forEach(el=>{el.onclick=(e)=>{e.preventDefault();const id=el.dataset.id;state.phaseItems[id]=!state.phaseItems[id];saveState(state);el.classList.toggle('done',!!state.phaseItems[id]);const gi=parseInt(el.closest('.goal').dataset.gi,10);const gp=goalProgress(idx,gi);const goalEl=el.closest('.goal');goalEl.querySelector('.g-pfill').style.width=gp.pct+'%';goalEl.querySelector('.g-pct').textContent=gp.pct+'%';const pr2=phaseProgress(idx);document.getElementById('psPct').innerHTML=`${pr2.pct}<small>%</small>`;document.getElementById('psFill').style.width=pr2.pct+'%';document.getElementById('psStat').textContent=`${pr2.done} / ${pr2.total} ITEMS COMPLETE`;renderPhases();};});
+  document.getElementById('lockPhase').onclick=()=>{state.phase=idx+1;saveState(state);renderPhases();document.getElementById('lockPhase').textContent='■ LOCKED AS CURRENT';document.getElementById('lockPhase').classList.add('is-locked');};
+  modal.classList.add('open');
+}
+function renderIncome(){const targets={prop:40000,live:20000,digital:50000};let tot=0;document.querySelectorAll('.meter[data-stream]').forEach(m=>{const s=m.dataset.stream,v=state.income[s]||0,t=targets[s],pct=Math.min(100,(v/t)*100);m.querySelector('.fill').style.width=pct+'%';m.querySelector('.cur').textContent='$'+v.toLocaleString();tot+=v;});document.getElementById('totCur').textContent='$'+tot.toLocaleString();document.getElementById('totFill').style.width=Math.min(100,(tot/110000)*100)+'%';}
+document.getElementById('editIncome').onclick=()=>{const p=parseInt(prompt('PROP TRADING — current monthly $ (target $40K)',state.income.prop)||state.income.prop,10);const l=parseInt(prompt('LIVE ACCOUNT — current monthly $ (target $20K)',state.income.live)||state.income.live,10);const d=parseInt(prompt('DIGITAL PRODUCTS — current monthly $ (target $50K)',state.income.digital)||state.income.digital,10);if(!isNaN(p))state.income.prop=p;if(!isNaN(l))state.income.live=l;if(!isNaN(d))state.income.digital=d;saveState(state);renderIncome();};
+function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderJournalObjective(container){
+  const today=todayKey();
+  const entry=state.journal[today]||{pre:'',live:'',technical:'',psychological:'',physiological:'',images:[]};
+  container.innerHTML=`<div class="j-section">
+  <div style="font-family:'Share Tech Mono';font-size:9px;letter-spacing:.28em;color:var(--amber);margin-bottom:4px">TODAY · ${today} · PHASE ${state.phase}</div>
+  <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--text-dim);line-height:1.5;margin-bottom:8px;border-left:2px solid var(--amber);padding-left:8px">Data point collection is the foundational piece to evolving as a trader. Technical, psychological, and physiological data are the three measurement sets required to grow.</div>
+  <div class="j-tabs-inner">
+    <div class="j-tab-inner active" data-jti="pre">PRE · MODELS</div>
+    <div class="j-tab-inner" data-jti="live">LIVE · MODELS</div>
+    <div class="j-tab-inner" data-jti="ops">OPERATIONAL REVIEW</div>
+    <div class="j-tab-inner" data-jti="archive">ARCHIVE</div>
+  </div>
+  <div class="j-panel-inner active" id="jpi-pre">
+    <div class="j-field-inner">
+      <label class="j-lbl">PRE · MULTIDISCIPLINARY MODELS <span>BIAS · LEVELS · NARRATIVE · A+ ONLY</span></label>
+      <textarea class="j-ta" id="jf-pre" placeholder="Pre-session model analysis. What is the bias? What are the key levels? Describe the A+ scenario. If no valid A+ exists — write that and close the platform.">${escHtml(entry.pre||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="jpi-live">
+    <div class="j-field-inner">
+      <label class="j-lbl">LIVE · MULTIDISCIPLINARY MODELS <span>PROCESS LANGUAGE ONLY — NO P&L</span></label>
+      <textarea class="j-ta" id="jf-live" style="min-height:110px" placeholder="Live session notes. What did the model deliver? SMT present? POI respected? Displacement clean? CSD confirmed? What happened — process only.">${escHtml(entry.live||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="jpi-ops">
+    <div class="j-ops-grid">
+      <div class="j-field-inner"><label class="j-lbl">TECHNICAL DATA</label><textarea class="j-ta" id="jf-tech" placeholder="Model accuracy, confluences hit, levels respected, setup quality, what the chart showed vs what was expected.">${escHtml(entry.technical||'')}</textarea></div>
+      <div class="j-field-inner"><label class="j-lbl">PSYCHOLOGICAL DATA</label><textarea class="j-ta" id="jf-psych" placeholder="State pre/during/post. Identity alignment. Shadow observed. Hesitation, urgency, or revenge impulse. What the mind was doing.">${escHtml(entry.psychological||'')}</textarea></div>
+      <div class="j-field-inner"><label class="j-lbl">PHYSIOLOGICAL DATA</label><textarea class="j-ta" id="jf-physio" placeholder="Sleep quality, energy level, body tension, breath, regulation quality during session. Physical state shapes execution.">${escHtml(entry.physiological||'')}</textarea></div>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="jpi-archive"><div class="j-archive" id="j-archive-list"></div></div>
+  <div class="j-img-area" id="jImgArea"><input type="file" id="jImgInput" accept="image/*" multiple style="display:none">▸ ATTACH CHARTS / SCREENSHOTS · click to upload</div>
+  <div class="j-img-grid" id="jImgGrid"></div>
+  <div class="j-actions-bar">
+    <button class="j-btn" id="jSaveEntry">▸ SAVE ENTRY</button>
+    <button class="j-btn cy" id="jExportMd">↓ EXPORT .MD</button>
+    <span class="j-saved-msg" id="jSavedMsg">✓ ENTRY SAVED</span>
+  </div>
+  </div>`;
+  function renderImages(){const grid=document.getElementById('jImgGrid');if(!grid)return;const imgs=(state.journal[today]||{}).images||[];grid.innerHTML=imgs.map((src,i)=>`<div class="j-img-wrap"><img class="j-img-thumb" src="${src}" onclick="window.open('${src}')"><button class="j-img-del" data-idx="${i}">×</button></div>`).join('');grid.querySelectorAll('.j-img-del').forEach(btn=>{btn.onclick=(e)=>{e.stopPropagation();const idx=parseInt(btn.dataset.idx,10);if(state.journal[today]&&state.journal[today].images){state.journal[today].images.splice(idx,1);saveState(state);renderImages();}};});}
+  renderImages();
+  function renderArchive(){const list=document.getElementById('j-archive-list');if(!list)return;const entries=Object.keys(state.journal||{}).filter(d=>d!==today).sort().reverse();if(!entries.length){list.innerHTML='<div class="no-entries">NO PREVIOUS ENTRIES</div>';return;}
+    list.innerHTML=entries.map(date=>{const e=state.journal[date]||{};return `<div class="j-arch-item"><div class="j-arch-head"><span class="arch-date">${date}</span><span>▸ EXPAND</span></div><div class="j-arch-body">${e.pre?`<div class="j-arch-section"><div class="j-arch-sl">PRE · MODELS</div><div class="j-arch-text">${escHtml(e.pre)}</div></div>`:''} ${e.live?`<div class="j-arch-section"><div class="j-arch-sl">LIVE · MODELS</div><div class="j-arch-text">${escHtml(e.live)}</div></div>`:''} ${(e.technical||e.psychological||e.physiological)?`<div class="j-arch-section"><div class="j-arch-sl">OPERATIONAL REVIEW</div>${e.technical?`<div style="margin-bottom:6px"><span style="color:var(--cy-2);font-size:9px;letter-spacing:.2em">TECHNICAL //</span><div class="j-arch-text">${escHtml(e.technical)}</div></div>`:''} ${e.psychological?`<div style="margin-bottom:6px"><span style="color:var(--cy-2);font-size:9px;letter-spacing:.2em">PSYCHOLOGICAL //</span><div class="j-arch-text">${escHtml(e.psychological)}</div></div>`:''} ${e.physiological?`<div><span style="color:var(--cy-2);font-size:9px;letter-spacing:.2em">PHYSIOLOGICAL //</span><div class="j-arch-text">${escHtml(e.physiological)}</div></div>`:''}</div>`:''} ${(e.images&&e.images.length)?`<div class="j-arch-imgs">${e.images.map(src=>`<img class="j-arch-img" src="${src}" onclick="window.open('${src}')">`).join('')}</div>`:''}<div class="j-arch-actions"><button class="j-btn cy" style="font-size:9px;padding:5px 10px" onclick="exportJournalMd('${date}')">↓ SAVE AS .MD</button></div></div></div>`;}).join('');
+    list.querySelectorAll('.j-arch-head').forEach(h=>{h.onclick=()=>h.parentElement.classList.toggle('open');});}
+  container.querySelectorAll('.j-tab-inner').forEach(tab=>{tab.onclick=()=>{const key=tab.dataset.jti;container.querySelectorAll('.j-tab-inner').forEach(t=>t.classList.toggle('active',t===tab));container.querySelectorAll('.j-panel-inner').forEach(p=>p.classList.toggle('active',p.id==='jpi-'+key));const ia=document.getElementById('jImgArea'),ig=document.getElementById('jImgGrid'),ab=container.querySelector('.j-actions-bar');const arch=key==='archive';if(ia)ia.style.display=arch?'none':'';if(ig)ig.style.display=arch?'none':'';if(ab)ab.style.display=arch?'none':'';if(arch)renderArchive();};});
+  const imgArea=document.getElementById('jImgArea'),imgInput=document.getElementById('jImgInput');
+  if(imgArea)imgArea.onclick=()=>imgInput.click();
+  if(imgInput)imgInput.onchange=(e)=>{Array.from(e.target.files).forEach(file=>{const reader=new FileReader();reader.onload=(ev)=>{if(!state.journal[today])state.journal[today]={pre:'',live:'',technical:'',psychological:'',physiological:'',images:[]};if(!state.journal[today].images)state.journal[today].images=[];state.journal[today].images.push(ev.target.result);saveState(state);renderImages();};reader.readAsDataURL(file);});imgInput.value='';};
+  const saveBtn=document.getElementById('jSaveEntry');
+  if(saveBtn)saveBtn.onclick=()=>{if(!state.journal[today])state.journal[today]={images:[]};if(!state.journal[today].images)state.journal[today].images=[];state.journal[today].pre=(document.getElementById('jf-pre')||{}).value||'';state.journal[today].live=(document.getElementById('jf-live')||{}).value||'';state.journal[today].technical=(document.getElementById('jf-tech')||{}).value||'';state.journal[today].psychological=(document.getElementById('jf-psych')||{}).value||'';state.journal[today].physiological=(document.getElementById('jf-physio')||{}).value||'';saveState(state);updateL3Indicator();const msg=document.getElementById('jSavedMsg');if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2500);}};
+  const expBtn=document.getElementById('jExportMd');if(expBtn)expBtn.onclick=()=>exportJournalMd(today);
+}
+function exportJournalMd(date){
+  const e=(state.journal||{})[date]||{};
+  const md=`---\ndate: ${date}\ntype: trade-journal\nphase: ${state.phase}\ntags: [identity-pro, trade-journal, phase-${state.phase}]\n---\n\n# Trade Journal · ${date}\n\n## Pre · Multidisciplinary Models\n\n${e.pre||'—'}\n\n## Live · Multidisciplinary Models\n\n${e.live||'—'}\n\n## Operational Review\n\n### Technical Data\n${e.technical||'—'}\n\n### Psychological Data\n${e.psychological||'—'}\n\n### Physiological Data\n${e.physiological||'—'}\n\n---\n*Data point collection is the foundational piece to evolving as a trader.*\n*Phase ${state.phase} Identity: I am a consistently funded trader. My edge is proven. I follow my rules without negotiation.*\n`;
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${date}-Trade-Journal.md`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function renderIdentityJournalObjective(container){
+  const today=todayKey();
+  state.identityJournal=state.identityJournal||{};
+  const entry=state.identityJournal[today]||{morning:'',shadows:'',rewrites:'',achievable:''};
+  container.innerHTML=`<div class="j-section">
+  <div style="font-family:'Share Tech Mono';font-size:9px;letter-spacing:.28em;color:var(--amber);margin-bottom:4px">TODAY · ${today} · IDENTITY LOG · PHASE ${state.phase}</div>
+  <div style="font-family:'Share Tech Mono';font-size:9px;color:var(--text-dim);line-height:1.5;margin-bottom:8px;border-left:2px solid var(--amber);padding-left:8px">Identity is the source layer. Track who you are being, what shadow surfaces, what corrects, and what proves. The work is becoming, but the broadcast is being.</div>
+  <div class="j-tabs-inner">
+    <div class="j-tab-inner active" data-jti="morning">MORNING ANCHOR</div>
+    <div class="j-tab-inner" data-jti="shadows">SHADOW WATCH</div>
+    <div class="j-tab-inner" data-jti="rewrites">REWRITES</div>
+    <div class="j-tab-inner" data-jti="achievable">ACHIEVABLE LOG</div>
+    <div class="j-tab-inner" data-jti="archive">ARCHIVE</div>
+  </div>
+  <div class="j-panel-inner active" id="ijpi-morning">
+    <div class="j-field-inner">
+      <label class="j-lbl">MORNING ANCHOR <span>IDENTITY STATEMENT · TODAY'S INTENTION</span></label>
+      <textarea class="j-ta" id="ijf-morning" placeholder="Speak the identity aloud. Drop into Settled Authority. What is the intention for today? Who am I being before the day begins?">${escHtml(entry.morning||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="ijpi-shadows">
+    <div class="j-field-inner">
+      <label class="j-lbl">SHADOW WATCH <span>HESITATION · COLLAPSE · FEAR · SCARCITY · PROVING · REVENGE</span></label>
+      <textarea class="j-ta" id="ijf-shadows" style="min-height:110px" placeholder="What shadow surfaced today? When? What was the trigger? Did you act from it or recode? Name it without judgment — naming is half the cure.">${escHtml(entry.shadows||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="ijpi-rewrites">
+    <div class="j-field-inner">
+      <label class="j-lbl">SELF-CONCEPT REWRITES <span>OLD "I AM SOMEONE WHO…" → NEW IDENTITY VOICE</span></label>
+      <textarea class="j-ta" id="ijf-rewrites" style="min-height:110px" placeholder="Catch any old-identity language that surfaced. Write the rewrite in the new identity's voice. Speak it aloud. Visualize the moment that proves it.">${escHtml(entry.rewrites||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="ijpi-achievable">
+    <div class="j-field-inner">
+      <label class="j-lbl">ACHIEVABLE LOG <span>EVIDENCE · SYNCHRONICITIES · EMBODIED MOMENTS</span></label>
+      <textarea class="j-ta" id="ijf-achievable" style="min-height:130px" placeholder="What came in today as proof the new identity is real? Specific moments — a clean execution, a regulated response, a synchronicity, an unexpected confirmation. The 3D evidence of the broadcast.">${escHtml(entry.achievable||'')}</textarea>
+    </div>
+  </div>
+  <div class="j-panel-inner" id="ijpi-archive"><div class="j-archive" id="ij-archive-list"></div></div>
+  <div class="j-actions-bar">
+    <button class="j-btn" id="ijSaveEntry">▸ SAVE ENTRY</button>
+    <button class="j-btn cy" id="ijExportMd">↓ EXPORT .MD</button>
+    <span class="j-saved-msg" id="ijSavedMsg">✓ ENTRY SAVED</span>
+  </div>
+  </div>`;
+  function renderArchive(){
+    const list=document.getElementById('ij-archive-list');if(!list)return;
+    const entries=Object.keys(state.identityJournal||{}).filter(d=>d!==today).sort().reverse();
+    if(!entries.length){list.innerHTML='<div class="no-entries">NO PREVIOUS ENTRIES</div>';return;}
+    list.innerHTML=entries.map(date=>{const e=state.identityJournal[date]||{};return `<div class="j-arch-item"><div class="j-arch-head"><span class="arch-date">${date}</span><span>▸ EXPAND</span></div><div class="j-arch-body">${e.morning?`<div class="j-arch-section"><div class="j-arch-sl">MORNING ANCHOR</div><div class="j-arch-text">${escHtml(e.morning)}</div></div>`:''} ${e.shadows?`<div class="j-arch-section"><div class="j-arch-sl">SHADOW WATCH</div><div class="j-arch-text">${escHtml(e.shadows)}</div></div>`:''} ${e.rewrites?`<div class="j-arch-section"><div class="j-arch-sl">REWRITES</div><div class="j-arch-text">${escHtml(e.rewrites)}</div></div>`:''} ${e.achievable?`<div class="j-arch-section"><div class="j-arch-sl">ACHIEVABLE LOG</div><div class="j-arch-text">${escHtml(e.achievable)}</div></div>`:''}<div class="j-arch-actions"><button class="j-btn cy" style="font-size:9px;padding:5px 10px" onclick="exportIdentityJournalMd('${date}')">↓ SAVE AS .MD</button></div></div></div>`;}).join('');
+    list.querySelectorAll('.j-arch-head').forEach(h=>{h.onclick=()=>h.parentElement.classList.toggle('open');});
+  }
+  container.querySelectorAll('.j-tab-inner').forEach(tab=>{tab.onclick=()=>{const key=tab.dataset.jti;container.querySelectorAll('.j-tab-inner').forEach(t=>t.classList.toggle('active',t===tab));container.querySelectorAll('.j-panel-inner').forEach(p=>p.classList.toggle('active',p.id==='ijpi-'+key));const ab=container.querySelector('.j-actions-bar');const arch=key==='archive';if(ab)ab.style.display=arch?'none':'';if(arch)renderArchive();};});
+  const saveBtn=document.getElementById('ijSaveEntry');
+  if(saveBtn)saveBtn.onclick=()=>{state.identityJournal[today]={morning:(document.getElementById('ijf-morning')||{}).value||'',shadows:(document.getElementById('ijf-shadows')||{}).value||'',rewrites:(document.getElementById('ijf-rewrites')||{}).value||'',achievable:(document.getElementById('ijf-achievable')||{}).value||''};saveState(state);const msg=document.getElementById('ijSavedMsg');if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2500);}};
+  const expBtn=document.getElementById('ijExportMd');if(expBtn)expBtn.onclick=()=>exportIdentityJournalMd(today);
+}
+function exportIdentityJournalMd(date){
+  const e=(state.identityJournal||{})[date]||{};
+  const md=`---\ndate: ${date}\ntype: identity-journal\nphase: ${state.phase}\ntags: [identity-pro, identity-journal, shadow-work, phase-${state.phase}]\n---\n\n# Identity Journal · ${date}\n\n## Morning Anchor\n\n${e.morning||'—'}\n\n## Shadow Watch\n\n${e.shadows||'—'}\n\n## Self-Concept Rewrites\n\n${e.rewrites||'—'}\n\n## Achievable Log\n\n${e.achievable||'—'}\n\n---\n*Identity is the source layer. The work is becoming, but the broadcast is being.*\n*Phase ${state.phase} Identity: I am a consistently funded trader. My edge is proven. I follow my rules without negotiation.*\n`;
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${date}-Identity-Journal.md`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function renderFocusWheelObjective(container){
+  state.focusWheel=state.focusWheel||{title:'',statements:Array(12).fill('')};
+  const fw=state.focusWheel;
+  if(!Array.isArray(fw.statements))fw.statements=Array(12).fill('');
+  while(fw.statements.length<12)fw.statements.push('');
+  function buildSvg(){
+    const cx=200,cy=200,rOuter=180,rInner=62;
+    let segs='';
+    for(let i=0;i<12;i++){
+      const a0=(i*30-90)*Math.PI/180,a1=((i+1)*30-90)*Math.PI/180;
+      const x0=cx+rInner*Math.cos(a0),y0=cy+rInner*Math.sin(a0);
+      const x1=cx+rOuter*Math.cos(a0),y1=cy+rOuter*Math.sin(a0);
+      const x2=cx+rOuter*Math.cos(a1),y2=cy+rOuter*Math.sin(a1);
+      const x3=cx+rInner*Math.cos(a1),y3=cy+rInner*Math.sin(a1);
+      const filled=fw.statements[i]&&fw.statements[i].trim()?'filled':'';
+      const path=`M ${x0} ${y0} L ${x1} ${y1} A ${rOuter} ${rOuter} 0 0 1 ${x2} ${y2} L ${x3} ${y3} A ${rInner} ${rInner} 0 0 0 ${x0} ${y0} Z`;
+      const am=((i+0.5)*30-90)*Math.PI/180;
+      const tx=cx+((rOuter+rInner)/2)*Math.cos(am);
+      const ty=cy+((rOuter+rInner)/2)*Math.sin(am);
+      const stmt=fw.statements[i]||'';
+      const display=stmt.length>22?stmt.slice(0,20)+'…':stmt;
+      segs+=`<path class="fw-seg ${filled}" d="${path}"></path>`;
+      segs+=`<text class="fw-num" x="${cx+(rInner+10)*Math.cos(am)}" y="${cy+(rInner+10)*Math.sin(am)+3}">${i+1}</text>`;
+      if(display)segs+=`<text class="fw-seg-text" x="${tx}" y="${ty}" text-anchor="middle">${escHtml(display)}</text>`;
+    }
+    const titleText=(fw.title||'').toUpperCase();
+    let titleLines='';
+    if(titleText){const words=titleText.split(/\s+/);const lines=[];let cur='';words.forEach(w=>{if((cur+' '+w).trim().length>14){if(cur)lines.push(cur);cur=w;}else{cur=(cur?cur+' ':'')+w;}});if(cur)lines.push(cur);const max=Math.min(lines.length,4);const startY=cy-((max-1)*5);for(let li=0;li<max;li++){titleLines+=`<text class="fw-center-text" x="${cx}" y="${startY+li*11}">${escHtml(lines[li])}</text>`;}}
+    else titleLines=`<text class="fw-center-text" x="${cx}" y="${cy+3}" style="opacity:.4">DESIRE</text>`;
+    return `<svg class="fw-svg" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">${segs}<circle class="fw-center" cx="${cx}" cy="${cy}" r="${rInner}"></circle>${titleLines}</svg>`;
+  }
+  container.innerHTML=`<div class="fw-wrap">
+    <details class="fw-instructions">
+      <summary>▸ INSTRUCTIONS · HOW TO USE THE FOCUS WHEEL</summary>
+      <div class="fw-inst-body">
+        <div style="margin-bottom:10px;color:var(--cy-2);letter-spacing:.16em;font-size:10px">PROCESS · AS GIVEN BY ABRAHAM-HICKS</div>
+        <ol>
+          <li>Identify the desire. Write it in the <em>inner circle</em> as a clear, present-tense statement of what you want — already-true, not aspirational.</li>
+          <li>Drop in. Notice what feels off when you say it. The gap is the work.</li>
+          <li>Around the wheel, fill in <em>8–12 supporting statements</em> that you can actually believe right now AND that step you closer to the center.</li>
+          <li>Each statement should feel <em>true and slightly relieving</em>. If it feels like a stretch, soften it. If it feels too easy, sharpen it.</li>
+          <li>Move clockwise. Don't argue with the desire — surround it with believable truths until the center feels true too.</li>
+          <li>Speak the wheel daily. Or use it as needed when a desire feels distant or 3D evidence is lagging.</li>
+        </ol>
+        <div style="margin-top:10px;padding-top:8px;border-top:1px dashed var(--line);color:var(--cy-1);font-size:10.5px;letter-spacing:.04em"><em>You're not affirming. You're closing the gap.</em> The wheel works because each statement raises your alignment one notch — and at the top of the wheel, the desire feels native.</div>
+      </div>
+    </details>
+    <div class="fw-stage">
+      <div class="fw-svg-wrap" id="fwSvgWrap">${buildSvg()}</div>
+      <div class="fw-form">
+        <div class="fw-title-field">
+          <label>THE DESIRE · INNER CIRCLE</label>
+          <input type="text" class="fw-title-input" id="fwTitle" placeholder="e.g. $110K / month · already true" value="${escHtml(fw.title||'')}">
+        </div>
+        <div class="fw-stmts">
+          <div class="fw-stmts-label">SUPPORTING STATEMENTS · 8–12</div>
+          ${Array.from({length:12}).map((_,i)=>`<div class="fw-stmt-row"><span class="fw-stmt-num">${String(i+1).padStart(2,'0')}</span><input type="text" class="fw-stmt-input" data-fwi="${i}" placeholder="Statement ${i+1} — believable + slightly relieving" value="${escHtml(fw.statements[i]||'')}"></div>`).join('')}
+        </div>
+        <div class="fw-actions-bar">
+          <button class="j-btn" id="fwSave">▸ SAVE WHEEL</button>
+          <button class="j-btn cy" id="fwExport">↓ EXPORT .MD</button>
+          <button class="j-btn" id="fwReset" style="border-color:var(--red);color:var(--red)">⟲ NEW WHEEL</button>
+          <span class="j-saved-msg" id="fwSavedMsg">✓ WHEEL SAVED</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  function refreshSvg(){const wrap=document.getElementById('fwSvgWrap');if(wrap)wrap.innerHTML=buildSvg();}
+  const titleEl=document.getElementById('fwTitle');
+  if(titleEl)titleEl.oninput=()=>{state.focusWheel.title=titleEl.value;refreshSvg();};
+  container.querySelectorAll('.fw-stmt-input').forEach(inp=>{inp.oninput=()=>{const i=parseInt(inp.dataset.fwi,10);state.focusWheel.statements[i]=inp.value;refreshSvg();};});
+  const saveBtn=document.getElementById('fwSave');
+  if(saveBtn)saveBtn.onclick=()=>{saveState(state);const msg=document.getElementById('fwSavedMsg');if(msg){msg.classList.add('show');setTimeout(()=>msg.classList.remove('show'),2500);}};
+  const expBtn=document.getElementById('fwExport');
+  if(expBtn)expBtn.onclick=()=>exportFocusWheelMd();
+  const resetBtn=document.getElementById('fwReset');
+  if(resetBtn)resetBtn.onclick=()=>{if(!confirm('Reset focus wheel? This clears the current desire and all 12 statements.'))return;state.focusWheel={title:'',statements:Array(12).fill('')};saveState(state);renderFocusWheelObjective(container);};
+}
+function exportFocusWheelMd(){
+  const fw=state.focusWheel||{title:'',statements:[]};
+  const date=todayKey();
+  const stmts=(fw.statements||[]).map((s,i)=>`${i+1}. ${s||'—'}`).join('\n');
+  const md=`---\ndate: ${date}\ntype: focus-wheel\nphase: ${state.phase}\ntags: [identity-pro, focus-wheel, abraham-hicks, phase-${state.phase}]\n---\n\n# Focus Wheel · ${date}\n\n## The Desire (Inner Circle)\n\n**${fw.title||'—'}**\n\n## Supporting Statements\n\n${stmts}\n\n---\n*Process: Abraham-Hicks Focus Wheel.*\n*You're not affirming — you're closing the gap. Each statement raises alignment one notch.*\n`;
+  const blob=new Blob([md],{type:'text/markdown;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${date}-Focus-Wheel.md`;document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+function renderAll(){renderHabits();updateCenter();renderPhases();renderIncome();}
+renderAll();
+// CORE HUB · TOGGLE DAILY HABITS PANEL
+(function wireCoreToggle(){
+  const coreCenter=document.querySelector('.core .center');
+  const habitsWrap=document.querySelector('.habits-wrap');
+  if(!coreCenter||!habitsWrap)return;
+  coreCenter.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    const willShow=!habitsWrap.classList.contains('visible');
+    habitsWrap.classList.toggle('visible',willShow);
+    coreCenter.classList.toggle('active',willShow);
+  });
+})();
+// TO DO LIST · Tabs by area of life · Completed archive
+(function wireTodos(){
+  state.todos = state.todos || [];
+  const AREAS = [
+    {id:'TRADE',    tag:'TR',  name:'TRADING',          sub:'Edge in motion.',                  intro:'Tasks for the operator. Setups to study, evals to pass, journal cleanups, broker tasks, anything that keeps the trading edge sharp and the protocol locked.'},
+    {id:'IDENTITY', tag:'ID',  name:'IDENTITY WORK',    sub:'The recoding layer.',              intro:'Tasks for the becoming. Beliefs to rewrite, scripts to record, visualization sessions, shadow work — the inner moves that install the new self-concept.'},
+    {id:'CLAUDE',   tag:'AI',  name:'CLAUDE',           sub:'Build with the assistant.',        intro:'Tasks involving Claude — prompts to refine, dashboards to extend, automations to build, research to delegate. The leverage layer for everything else.'},
+    {id:'FINANCE',  tag:'$$',  name:'FINANCES',         sub:'Capital, accounts, flows.',        intro:'Tasks for the money architecture. Accounts to open, statements to review, transfers, taxes, payouts, structure — the plumbing under the streams.'},
+    {id:'HOME',     tag:'HM',  name:'HOME',             sub:'Environment is identity.',         intro:'Tasks for the physical space. Cleaning, fixing, upgrading, organizing — the broadcast environment that holds the version of you living the result.'},
+    {id:'FAMILY',   tag:'FAM', name:'FAMILY',           sub:'Relationships compound.',          intro:'Tasks for the people. Calls, plans, gifts, follow-ups, presence — the relational layer that the lifestyle exists to serve.'},
+    {id:'DIGITAL',  tag:'DB',  name:'DIGITAL BUSINESS', sub:'The third stream.',                intro:'Tasks for the product. Concept work, outlines, audience building, sales pages, launches — the daily input that crystallizes Phase 3.'},
+    {id:'TRAVEL',   tag:'TVL', name:'TRAVEL',           sub:'First class is default.',          intro:'Tasks for the movement. Flights to book, trips to plan, lounges, hotels, Scottsdale scouting — the lifestyle in motion. Travel is identity, not reward.'}
+  ];
+  const todoModal = document.getElementById('todoModal');
+  const todoTabsEl = document.getElementById('todoTabs');
+  const todoBodyEl = document.getElementById('todoBody');
+  const todoBtn = document.getElementById('todoOpenBtn');
+  const todoBtnCount = document.getElementById('todoBtnCount');
+  const todoTotalMeta = document.getElementById('todoTotalMeta');
+  const todoCloseBtn = document.getElementById('todoClose');
+  let activeTab = 'TRADE';
+
+  function openCounts(){
+    const open = state.todos.filter(t=>!t.done);
+    const done = state.todos.filter(t=>t.done);
+    return {open, done};
+  }
+  function countByArea(areaId){
+    return state.todos.filter(t=>t.area===areaId && !t.done).length;
+  }
+  function updateBtnCount(){
+    const {open, done} = openCounts();
+    if(todoBtnCount) todoBtnCount.textContent = open.length;
+    if(todoTotalMeta) todoTotalMeta.textContent = `${open.length} OPEN · ${done.length} COMPLETE`;
+  }
+  function renderTabs(){
+    todoTabsEl.innerHTML = '';
+    AREAS.forEach(a=>{
+      const c = countByArea(a.id);
+      const tab = document.createElement('div');
+      tab.className = 'todo-tab' + (activeTab===a.id?' active':'');
+      tab.dataset.tab = a.id;
+      tab.innerHTML = `<span class="tab-tag">${a.tag}</span><span>${a.name}</span><span class="tab-pill">${c}</span>`;
+      tab.onclick = ()=>{ activeTab = a.id; render(); };
+      todoTabsEl.appendChild(tab);
+    });
+    const doneCount = state.todos.filter(t=>t.done).length;
+    const ct = document.createElement('div');
+    ct.className = 'todo-tab completed-tab' + (activeTab==='DONE'?' active':'');
+    ct.dataset.tab = 'DONE';
+    ct.innerHTML = `<span class="tab-tag">✓</span><span>COMPLETED</span><span class="tab-pill">${doneCount}</span>`;
+    ct.onclick = ()=>{ activeTab='DONE'; render(); };
+    todoTabsEl.appendChild(ct);
+  }
+  function fmtDate(ts){
+    if(!ts) return '';
+    const d = new Date(ts);
+    return d.toLocaleDateString('en-US',{month:'short',day:'2-digit'}).toUpperCase();
+  }
+  function renderActivePanel(){
+    todoBodyEl.innerHTML = '';
+    const panel = document.createElement('div');
+    panel.className = 'todo-panel active';
+    if(activeTab === 'DONE'){
+      const intro = document.createElement('div');
+      intro.className = 'todo-intro';
+      intro.innerHTML = `<b>COMPLETED · ALL AREAS</b>The receipt of execution. Each item here is identity proven through action. Stay in the frequency of having done it cleanly.`;
+      panel.appendChild(intro);
+      const done = state.todos.filter(t=>t.done).sort((a,b)=>(b.completedAt||0)-(a.completedAt||0));
+      if(done.length === 0){
+        const empty = document.createElement('div');
+        empty.className = 'todo-empty';
+        empty.innerHTML = `NO COMPLETED TASKS YET<span>Check off an item from any area to file it here.</span>`;
+        panel.appendChild(empty);
+      } else {
+        const list = document.createElement('div');
+        list.className = 'todo-list';
+        done.forEach(t=>list.appendChild(renderItem(t,true)));
+        panel.appendChild(list);
+        const clearBtn = document.createElement('button');
+        clearBtn.className = 'todo-completed-clear';
+        clearBtn.textContent = '▸ CLEAR ALL COMPLETED';
+        clearBtn.onclick = ()=>{
+          if(!confirm('Clear all completed tasks? This cannot be undone.')) return;
+          state.todos = state.todos.filter(t=>!t.done);
+          saveState(state);
+          render();
+        };
+        panel.appendChild(clearBtn);
+      }
+    } else {
+      const area = AREAS.find(a=>a.id===activeTab);
+      const intro = document.createElement('div');
+      intro.className = 'todo-intro';
+      intro.innerHTML = `<b>${area.tag} · ${area.name} — ${area.sub}</b>${area.intro}`;
+      panel.appendChild(intro);
+      const add = document.createElement('div');
+      add.className = 'todo-add';
+      add.innerHTML = `<input type="text" placeholder="Add a task to ${area.name}…" id="todoNewInput"><button id="todoAddBtn">▸ ADD TASK</button>`;
+      panel.appendChild(add);
+      const open = state.todos.filter(t=>t.area===activeTab && !t.done).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0));
+      const list = document.createElement('div');
+      list.className = 'todo-list';
+      if(open.length === 0){
+        const empty = document.createElement('div');
+        empty.className = 'todo-empty';
+        empty.innerHTML = `NO OPEN TASKS IN ${area.name}<span>The version of you that already has this would still take aligned action. Add one above.</span>`;
+        panel.appendChild(empty);
+      } else {
+        open.forEach(t=>list.appendChild(renderItem(t,false)));
+        panel.appendChild(list);
+      }
+      setTimeout(()=>{
+        const input = panel.querySelector('#todoNewInput');
+        const addBtn = panel.querySelector('#todoAddBtn');
+        if(addBtn) addBtn.onclick = ()=>addTodo(input);
+        if(input){ input.focus(); input.onkeydown = (e)=>{ if(e.key==='Enter') addTodo(input); }; }
+      },0);
+    }
+    todoBodyEl.appendChild(panel);
+  }
+  function renderItem(t, isCompleted){
+    const item = document.createElement('div');
+    item.className = 'todo-item' + (t.done?' done':'');
+    const areaTag = AREAS.find(a=>a.id===t.area);
+    item.innerHTML = `
+      <div class="td-box" data-act="toggle"></div>
+      <div class="td-text" data-act="toggle">${escHtml(t.text)}</div>
+      ${isCompleted ? `<span class="td-area">${areaTag?areaTag.tag+' · '+areaTag.name:t.area}</span><span class="td-when">DONE ${fmtDate(t.completedAt)}</span>` : `<span class="td-when">ADDED ${fmtDate(t.createdAt)}</span>`}
+      <button class="td-del" title="Delete" data-act="del">×</button>`;
+    item.addEventListener('click',(e)=>{
+      const act = (e.target.closest('[data-act]')||{}).dataset?.act;
+      if(act==='toggle') toggleTodo(t.id);
+      else if(act==='del') deleteTodo(t.id);
+    });
+    return item;
+  }
+  function addTodo(inputEl){
+    const v = (inputEl.value||'').trim();
+    if(!v) return;
+    state.todos.push({
+      id: 't'+Date.now()+'_'+Math.random().toString(36).slice(2,7),
+      text: v,
+      area: activeTab,
+      done: false,
+      createdAt: Date.now(),
+      completedAt: null
+    });
+    inputEl.value = '';
+    saveState(state);
+    render();
+    setTimeout(()=>{ const ni = document.getElementById('todoNewInput'); if(ni) ni.focus(); },0);
+  }
+  function toggleTodo(id){
+    const t = state.todos.find(x=>x.id===id);
+    if(!t) return;
+    t.done = !t.done;
+    t.completedAt = t.done ? Date.now() : null;
+    saveState(state);
+    render();
+  }
+  function deleteTodo(id){
+    if(!confirm('Delete this task?')) return;
+    state.todos = state.todos.filter(x=>x.id!==id);
+    saveState(state);
+    render();
+  }
+  function render(){
+    renderTabs();
+    renderActivePanel();
+    updateBtnCount();
+  }
+  function openTodoModal(){ render(); todoModal.classList.add('open'); }
+  function closeTodoModal(){ todoModal.classList.remove('open'); }
+  if(todoBtn) todoBtn.addEventListener('click',(e)=>{ e.stopPropagation(); openTodoModal(); });
+  if(todoCloseBtn) todoCloseBtn.addEventListener('click', closeTodoModal);
+  todoModal.addEventListener('click',(e)=>{ if(e.target===todoModal) closeTodoModal(); });
+  document.addEventListener('keydown',(e)=>{ if(e.key==='Escape' && todoModal.classList.contains('open')) closeTodoModal(); });
+  updateBtnCount();
+})();
+// AUTH GATE
+(function wireAuth(){
+  const gate=document.getElementById('authGate');
+  const input=document.getElementById('authInput');
+  const btn=document.getElementById('authBtn');
+  const err=document.getElementById('authError');
+  if(!gate||!input||!btn)return;
+  if(sessionStorage.getItem('idpro-auth')==='1'){gate.classList.add('unlocked');return;}
+  function unlock(){gate.classList.add('unlocked');sessionStorage.setItem('idpro-auth','1');}
+  function tryAuth(){
+    if(input.value==='superpwr'){unlock();return;}
+    err.textContent='✕ ACCESS DENIED';
+    err.classList.remove('shake');void err.offsetWidth;err.classList.add('shake');
+    input.value='';input.focus();
+  }
+  btn.addEventListener('click',tryAuth);
+  input.addEventListener('keydown',e=>{if(e.key==='Enter')tryAuth();});
+  setTimeout(()=>input.focus(),50);
+})();
+</script>
+</body>
+</html>
